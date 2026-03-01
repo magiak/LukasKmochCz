@@ -1,30 +1,1206 @@
 ---
 import Base from "../layouts/Base.astro";
+
+interface Project {
+  name: string;
+  url?: string;
+  image?: string;
+  type: "personal" | "work";
+  description: string;
+  highlight: string;
+  tech: string[];
+  features: string[];
+  infra?: string;
+}
+
+const projects: Project[] = [
+  {
+    name: "Get Content",
+    url: "https://getcontent.app",
+    image: "/images/projects/getcontent.png",
+    type: "personal",
+    description: "AI-powered marketing asset generation platform. An AI agent helps you define campaigns through chat, then a content pipeline generates images, videos with voiceovers, music, and animations — all from a single idea. The entire app was vibe-coded from frontend to backend to auth, showcasing what AI-powered development can build today.",
+    highlight: "Creating marketing content is expensive and slow. Get Content solves this with two layers of AI: first, an AI agent (Gemini/Claude) that you chat with to define what you want — it uses tools to generate files, follows best practices, and builds the campaign for you. Second, a content generation pipeline using Gemini for images and text, ElevenLabs for voiceovers, and FFmpeg to compose everything into polished videos with music. One idea in, weeks of content out.",
+    tech: ["Next.js 15", "TypeScript", "tRPC", "Prisma 6", "Tailwind CSS", "Google Gemini", "Claude", "ElevenLabs", "Playwright", "FFmpeg", "Stripe", "PostgreSQL"],
+    features: [
+      "AI agent chat — define campaigns via conversation, agent uses tools to generate output",
+      "Content pipeline — Gemini (images/text), ElevenLabs (voice), FFmpeg (video composition)",
+      "From static images to full videos with voiceovers, music, and animations",
+      "Admin dashboard with user management and billing",
+      "Credit-based + subscription billing via Stripe",
+      "Fully vibe-coded end-to-end — frontend, backend, auth, payments",
+    ],
+    infra: "GCP (e2-medium, Container-Optimized OS) · Docker · Nginx · Cloudflare · Cloud SQL",
+  },
+  {
+    name: "Refine & Learn",
+    url: "https://refineandlearn.com",
+    image: "/images/projects/refineandlearn.png",
+    type: "personal",
+    description: "AI-powered English improvement platform born from a personal need — after years of English lessons, I had no way to track my actual level, spot recurring mistakes, or measure real progress. RefineAndLearn listens to you speak, analyzes your mistakes, and gives concrete feedback on what you said wrong, where you hesitated, and which words you struggled with.",
+    highlight: "Traditional language learning gives you lessons but no real feedback loop. RefineAndLearn changes that — it listens to your speech, points out exactly where you paused or chose the wrong word, generates personalized practice exercises to target your weak spots, and tracks your progress over time. You can also discuss your learning path with AI — what to focus on next, how to reach the next level.",
+    tech: ["React 19", "TypeScript", "Vite 6", "Tailwind CSS", "Node.js", "Express", "Firebase", "Google Gemini", "OpenRouter", "Google Cloud Speech", "Google TTS", "WebSocket", "FFmpeg", "Sentry"],
+    features: [
+      "Real-time speech analysis — detects mistakes, hesitations, and word choice issues",
+      "Google Cloud Speech & TTS for voice recognition and pronunciation feedback",
+      "Multi-provider AI (Gemini + OpenRouter) for intelligent feedback and exercises",
+      "Personalized practice exercises generated from your weak spots",
+      "Progress tracking with charts — see your level and improvement trends",
+      "AI chat for learning guidance — what to focus on, how to level up",
+      "PWA support — installable on mobile, works offline",
+      "Text refinement — transforms rough text into polished, native-level English",
+    ],
+    infra: "Google Cloud Run · Docker · Cloud Build CI/CD · Firebase · Playwright E2E",
+  },
+  {
+    name: "Propeller",
+    url: "https://getonpropeller.com",
+    image: "/images/projects/propeller.png",
+    type: "work",
+    description: "SaaS for yacht charter operators. Booking lifecycle, CRM, and customer portal.",
+    highlight: "Charter operators juggle spreadsheets, emails, and manual processes to manage fleets and bookings. Propeller replaces all of that with one platform — fleet management, bookings, payments, contracts, and CRM in a single multi-tenant SaaS.",
+    tech: [".NET 8", "PostgreSQL", "Next.js 15", "Turborepo", "Stripe"],
+    features: [
+      "Fleet management & pricing calendars",
+      "Booking lifecycle with offers",
+    ],
+    infra: "AWS · GitLab CI/CD · Sentry",
+  },
+  {
+    name: "Dokempu",
+    url: "https://dokempu.cz",
+    image: "/images/projects/dokempu.png",
+    type: "work",
+    description: "Czech campsite marketplace. Search, browse, review features and AI pricing scraper.",
+    highlight: "Czech campers had no centralized place to find and compare campsites. Dokempu brings them onto one platform with geospatial search, reviews, and an AI pricing scraper monitoring ~400 competitor websites — cutting scraping costs by 95% through smart change detection.",
+    tech: [".NET 7", "PostgreSQL", "Next.js 13", "Playwright", "OpenRouter"],
+    features: [
+      "Geospatial campsite search",
+      "AI-powered pricing scraper",
+    ],
+    infra: "AWS · GitLab CI/CD",
+  },
+  {
+    name: "Campiri",
+    url: "https://campiri.com",
+    image: "/images/projects/campiri.png",
+    type: "work",
+    description: "Two-sided motorhome rental marketplace. Booking, payments, messaging.",
+    highlight: "Renting a campervan across Central Europe meant dealing with fragmented local operators. Campiri built a unified marketplace across 7 countries with real-time messaging, multi-gateway payments, and a booking system handling the full rental lifecycle.",
+    tech: [".NET 6", "PostgreSQL", "SignalR", "Next.js 14", "Stripe Connect"],
+    features: [
+      "Booking lifecycle with calendar",
+      "Real-time SignalR messaging",
+    ],
+    infra: "AWS & GCP · GitLab CI/CD",
+  },
+];
+
+interface Experience {
+  role: string;
+  company: string;
+  period: string;
+  location: string;
+  description: string;
+}
+
+interface Education {
+  institution: string;
+  degree: string;
+  field: string;
+  period: string;
+  title: string;
+}
+
+const experience: Experience[] = [
+  {
+    role: ".NET Developer",
+    company: "Iguana Technology",
+    period: "Apr 2019 – Present",
+    location: "Prague",
+    description: "Building and maintaining .NET backend systems, designing APIs and database architecture for multiple client projects.",
+  },
+  {
+    role: "Trainer",
+    company: "Gopas",
+    period: "Nov 2017 – Jan 2023",
+    location: "Prague",
+    description: "Teaching professional development courses on .NET, C#, and web technologies to corporate teams.",
+  },
+  {
+    role: "ASP.NET MVC Developer",
+    company: "Designeo Creative s.r.o.",
+    period: "Jul 2015 – Jan 2023",
+    location: "Prague",
+    description: "Developing web applications using ASP.NET MVC, delivering custom solutions for diverse client needs.",
+  },
+  {
+    role: "Software Developer",
+    company: "Cleverlance",
+    period: "Nov 2014 – Jun 2015",
+    location: "Prague",
+    description: "Enterprise software development for banking and insurance clients.",
+  },
+  {
+    role: "ASP.NET MVC Developer",
+    company: "Devis",
+    period: "Feb 2013 – May 2015",
+    location: "Prague",
+    description: "Building web applications with ASP.NET MVC for client projects.",
+  },
+  {
+    role: "Quality Assurance Tester",
+    company: "Siemens IT Solutions and Services",
+    period: "Jan 2011 – Jun 2011",
+    location: "Prague",
+    description: "Testing enterprise software systems and ensuring quality standards.",
+  },
+];
+
+const education: Education[] = [
+  {
+    institution: "Czech Technical University in Prague",
+    degree: "Master's degree",
+    field: "Web and Software Engineering",
+    period: "2012 – 2015",
+    title: "Ing.",
+  },
+];
+
+const techCategories = [
+  { name: "Backend (.NET Core)", items: ["C#", ".NET", "ASP.NET MVC", "Razor Pages", "EF Core", "PostgreSQL", "PostGIS"] },
+  { name: "Frontend", items: ["TypeScript", "Next.js", "React", "Vue.js", "Tailwind"] },
+  { name: "Cloud & Ops", items: ["AWS", "GCP", "Docker", "GitLab CI"] },
+  { name: "Tools", items: ["Swagger", "Postman", "DBeaver", "Comgate", "Stripe", "Supabase", "Playwright", "Google Analytics", "Sentry"] },
+  { name: "AI", items: ["Claude Code", "Open Claw", "GitHub Copilot", "Google Gemini", "OpenRouter", "Ollama", "ElevenLabs", "Whisper"] },
+];
+
+const personalProjects = projects.filter((p) => p.type === "personal");
+const workProjects = projects.filter((p) => p.type === "work");
 ---
 
-<Base title="Lukas Kmoch">
-  <main>
-    <h1>Lukas Kmoch</h1>
-    <p>Portfolio — coming soon.</p>
+<Base
+  title="Lukáš Kmoch | .NET Developer"
+  description="Portfolio of Lukáš Kmoch — .NET developer and tech enthusiast. Backend systems, fullstack applications, and AI-powered development."
+>
+  <main class="container">
+    <nav class="floating-nav reveal">
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#tech">Tech</a></li>
+        <li><a href="#projects">Work</a></li>
+        <li><a href="#personal">Personal</a></li>
+      </ul>
+    </nav>
+
+    <header id="home" class="hero">
+      <div class="hero-text">
+        <h1 class="gradient-text">Lukáš Kmoch</h1>
+        <h2 class="role">Software Engineer</h2>
+        <p class="subtitle">Building powerful backend systems with .NET and leveraging AI to become a truly fullstack engineer.</p>
+
+        <div class="hero-actions">
+          <a href="#projects" class="btn primary btn-link">View Projects</a>
+          <a href="https://github.com/magiak" target="_blank" class="btn outline btn-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+      <div class="hero-photo-wrapper">
+        <img src="/images/lukas-hero.webp" alt="Lukáš Kmoch" class="hero-photo" width="864" height="1232" />
+      </div>
+    </header>
+
+    <!-- About Me -->
+    <section id="about">
+      <h3 class="section-heading"><span>About Me</span> <div class="line"></div></h3>
+      <div class="intro-text reveal">
+        <p>Hi, my name is Lukáš. I am in my core <strong>.NET developer</strong> with a solid understanding of good app architecture. I've helped build the backend and frontend for 10+ companies including <em>Prazdroj, TSSK, Nakit, Lightverse, Dokempu, Campiri, Propeller, Freeway, Yacht Smart, and Skoda</em>.</p>
+        <p>I have deep experience building .NET MVC apps, Razor pages, and robust APIs. Throughout my career, I've learned Vue.js and React with the goal of becoming a fullstack engineer. While I consider myself more junior on the frontend compared to my 15 years in software development, <strong>by leveraging AI tools I am able to build almost anything</strong> on the frontend and extremely powerful backend systems.</p>
+        <p>I am a tech enthusiast who loves not just learning but also teaching — for over 5 years I taught .NET and web development courses at <strong>Gopas</strong>, helping corporate teams level up their skills. I share my learnings on my <a href="#" target="_blank" class="linkedin-link">LinkedIn profile</a> and have extensive experience building AI applications using Claude Code agents, custom rules, and skills.</p>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience">
+      <h3 class="section-heading"><span>Experience</span> <div class="line"></div></h3>
+      <div class="timeline">
+        {experience.map((exp, index) => (
+          <div class={`timeline-entry ${index === 0 ? 'timeline-current' : ''} reveal`} style={`transition-delay: ${index * 0.1}s`}>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <div>
+                  <h4 class="timeline-role">{exp.role}</h4>
+                  <span class="timeline-company">{exp.company}</span>
+                </div>
+                <div class="timeline-meta">
+                  <span class="timeline-period">{exp.period}</span>
+                  <span class="timeline-location">{exp.location}</span>
+                </div>
+              </div>
+              <p class="timeline-description">{exp.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education">
+      <h3 class="section-heading"><span>Education</span> <div class="line"></div></h3>
+      {education.map((edu, index) => (
+        <div class="education-card reveal" style={`transition-delay: ${index * 0.1}s`}>
+          <div class="education-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+              <path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5" />
+            </svg>
+          </div>
+          <div class="education-content">
+            <div class="education-header">
+              <h4 class="education-institution">{edu.institution}</h4>
+              <span class="timeline-period">{edu.period}</span>
+            </div>
+            <p class="education-detail">
+              {edu.degree}, {edu.field}
+              <span class="education-title">{edu.title}</span>
+            </p>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- Technologies Grid -->
+    <section id="tech">
+      <h3 class="section-heading"><span>Core Arsenal</span> <div class="line"></div></h3>
+      <div class="tech-grid">
+        {techCategories.map((cat, index) => (
+          <div class="tech-box glow-card reveal" style={`transition-delay: ${index * 0.1}s`}>
+            <h4>{cat.name}</h4>
+            <div class="tech-tags">
+              {cat.items.map((item) => (
+                <span class="tech-tag">{item}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Work Projects -->
+    <section id="projects">
+      <h3 class="section-heading"><span>Commercial Projects</span> <div class="line"></div></h3>
+      <p class="section-intro">Products I've worked on as a backend developer — designing APIs, building architecture, and managing databases. These are team products, not my own.</p>
+      <div class="project-grid split">
+        {workProjects.map((project, index) => (
+          <div class="project glow-card reveal" style={`transition-delay: ${index * 0.1}s`}>
+            {project.image && (
+              <a href={project.url} target="_blank" class="project-image-link">
+                <img src={project.image} alt={`${project.name} screenshot`} class="project-image" loading="lazy" />
+              </a>
+            )}
+            <div class="project-body">
+            <div class="project-header">
+              <h4 class="project-title">
+                {project.name}
+                {project.url && <a href={project.url} target="_blank" class="external-link">↗</a>}
+              </h4>
+              <span class="badge">Commercial</span>
+            </div>
+            <p class="description">{project.description}</p>
+            <div class="highlight">{project.highlight}</div>
+            <ul class="features">
+              {project.features.map(f => <li>{f}</li>)}
+            </ul>
+            <div class="project-tech">
+              {project.tech.map(t => <span class="tag">{t}</span>)}
+            </div>
+            {project.infra && <div class="infra-footer">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <span>{project.infra}</span>
+            </div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Personal Projects -->
+    <section id="personal">
+      <h3 class="section-heading"><span>Personal Initiatives</span> <div class="line"></div></h3>
+      <p class="section-intro">Side projects I'm building from scratch on my own — from idea to deployment. These are products I design, develop, and operate end-to-end, covering everything from architecture and backend to frontend, infrastructure, and payments. Some are live and growing, others are still in active development.</p>
+
+      <!-- Solar Charts — combined card -->
+      <div class="solarcharts-card glow-card reveal">
+        <a href="https://solarcharts.net" target="_blank" class="project-image-link">
+          <img src="/images/projects/solarcharts.png" alt="SolarCharts screenshot" class="project-image solarcharts-image" loading="lazy" />
+        </a>
+        <div class="solarcharts-content">
+          <div class="project-header">
+            <h4 class="project-title">
+              Solar Charts
+              <a href="https://solarcharts.net" target="_blank" class="external-link">↗</a>
+            </h4>
+            <span class="badge personal-badge">Personal</span>
+          </div>
+          <p class="description">A complete solar energy monitoring ecosystem built with .NET — a data-heavy backend ingesting readings from multiple devices every 10 seconds, a web dashboard with 40+ charts and an AI investment advisor, and a physical ESP32 hardware display for at-a-glance monitoring.</p>
+          <div class="highlight">Solar panel owners rely on basic manufacturer apps with limited insights. SolarCharts goes further — a robust .NET backend handles high-frequency IoT data from multiple devices, with PostgreSQL table partitioning to manage the growing dataset, server-side caching for fast dashboard rendering, automated database backups, and an AI advisor that gives concrete investment recommendations (e.g., "would a bigger battery pay off?"). The hardware display brings the data into your home without needing a phone.</div>
+          <div class="solarcharts-parts">
+            <div class="solarcharts-part">
+              <h5 class="part-label">Web App & Backend</h5>
+              <ul class="features">
+                <li>High-frequency data ingestion (10-second intervals from multiple devices)</li>
+                <li>PostgreSQL table partitioning for large time-series datasets</li>
+                <li>Server-side caching for fast dashboard rendering</li>
+                <li>40+ charts — production, consumption, battery, efficiency</li>
+                <li>AI Investment Advisor — personalized recommendations with ROI numbers</li>
+                <li>PRO subscription tier for AI features</li>
+                <li>Automated database backups</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tag">.NET</span>
+                <span class="tag">ASP.NET MVC</span>
+                <span class="tag">C#</span>
+                <span class="tag">EF Core</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">OpenRouter</span>
+              </div>
+            </div>
+            <div class="solarcharts-part">
+              <h5 class="part-label">LiveDisplay (Hardware)</h5>
+              <ul class="features">
+                <li>Real-time energy data on a physical embedded screen</li>
+                <li>Connects to SolarCharts API for live data</li>
+                <li>Embedded UI built with LVGL graphics library</li>
+              </ul>
+              <div class="project-tech">
+                <span class="tag">C/C++</span>
+                <span class="tag">ESP-IDF</span>
+                <span class="tag">LVGL</span>
+                <span class="tag">ESP32</span>
+              </div>
+            </div>
+          </div>
+          <div class="infra-footer">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span>Oracle Cloud (ARM VM) · Docker Compose · Nginx · PostgreSQL · Automated backups</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-grid split">
+        {personalProjects.map((project, index) => (
+          <div class="project glow-card reveal" style={`transition-delay: ${(index + 1) * 0.1}s`}>
+            {project.image && (
+              <a href={project.url} target="_blank" class="project-image-link">
+                <img src={project.image} alt={`${project.name} screenshot`} class="project-image" loading="lazy" />
+              </a>
+            )}
+            <div class="project-body">
+            <div class="project-header">
+              <h4 class="project-title">
+                {project.name}
+                {project.url && <a href={project.url} target="_blank" class="external-link">↗</a>}
+              </h4>
+              <span class="badge personal-badge">Personal</span>
+            </div>
+            <p class="description">{project.description}</p>
+            <div class="highlight">{project.highlight}</div>
+            <ul class="features">
+              {project.features.map(f => <li>{f}</li>)}
+            </ul>
+            <div class="project-tech">
+              {project.tech.map(t => <span class="tag">{t}</span>)}
+            </div>
+            {project.infra && <div class="infra-footer">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <span>{project.infra}</span>
+            </div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <footer>
+      <p>Lukáš Kmoch &copy; {new Date().getFullYear()}</p>
+    </footer>
+
   </main>
 </Base>
 
-<style>
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100dvh;
-    padding: 2rem;
+<style is:global>
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 5%;
   }
 
-  h1 {
-    font-size: 2rem;
+  /* FLOATING NAV */
+  .floating-nav {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: rgba(3, 3, 5, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    padding: 0.5rem 0.75rem;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), 0 0 20px -5px rgba(99, 102, 241, 0.15);
+  }
+
+  /* Reset transform for reveal while keeping centering */
+  .floating-nav.reveal {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  .floating-nav.reveal.active {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 99px;
+    transition: all 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-links a.active-link {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .floating-nav {
+      top: auto;
+      bottom: 2rem;
+      width: max-content;
+      max-width: 90%;
+    }
+    .floating-nav.reveal {
+      transform: translate(-50%, 20px);
+    }
+    .floating-nav.reveal.active {
+      transform: translate(-50%, 0);
+    }
+    .nav-links {
+      gap: 0.1rem;
+    }
+    .nav-links a {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+    }
+    /* Hide some links on mobile to fit screen */
+    .nav-links li:nth-child(4), /* Education */
+    .nav-links li:nth-child(5) /* Tech */ {
+      display: none;
+    }
+  }
+
+  /* HERO */
+  .hero {
+    padding: 12vh 0 4vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    position: relative;
+    min-height: 480px;
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 600px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-photo-wrapper {
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .hero-photo {
+    width: 340px;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+
+  h1.gradient-text {
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.03em;
+  }
+
+  .role {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 3rem;
+  }
+
+  .intro-text {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    max-width: 760px;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .intro-text strong {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .intro-text em {
+    color: #a5b4fc;
+    font-style: normal;
+  }
+
+  .linkedin-link {
+    color: var(--accent-secondary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s;
+  }
+  .linkedin-link:hover {
+    color: var(--text-primary);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn.primary {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    color: white;
+    box-shadow: 0 10px 30px -10px var(--accent-glow);
+  }
+
+  .btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px -10px rgba(168, 85, 247, 0.5);
+    filter: brightness(1.1);
+  }
+
+  .btn.outline {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-primary);
+  }
+
+  .btn.outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 4rem 0;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+  }
+
+  .section-heading .line {
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--card-border) 0%, transparent 100%);
+  }
+
+  .section-intro {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 720px;
+    margin-top: -1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* GLOW CARDS */
+  .glow-card {
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glow-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .glow-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--card-border-hover);
+    background: var(--card-bg-hover);
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5), 0 0 40px -10px var(--accent-glow);
+  }
+
+  .glow-card:hover::before {
+    opacity: 1;
+  }
+
+  /* TECH GRID */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tech-box {
+    padding: 1.5rem;
+  }
+  .tech-box h4 {
+    color: #e2e8f0;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tech-tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #cbd5e1;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tech-box:hover .tech-tag {
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #fff;
+  }
+
+  /* PROJECT GRID */
+  .project-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media(min-width: 900px) {
+    .project-grid.split {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .project {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .project-body {
+    padding: 2rem 2.25rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .project-image-link {
+    display: block;
+    overflow: hidden;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .project-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: brightness(0.85);
+  }
+
+  .glow-card:hover .project-image {
+    transform: scale(1.03);
+    filter: brightness(1);
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  .project-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .external-link {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    transition: color 0.2s;
+  }
+  .external-link:hover {
+    color: var(--accent-secondary);
+  }
+
+  .badge {
+    background: rgba(168, 85, 247, 0.15);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .personal-badge {
+    background: rgba(56, 189, 248, 0.1);
+    color: #7dd3fc;
+    border-color: rgba(56, 189, 248, 0.2);
+  }
+
+  .description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .highlight {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #cbd5e1;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    border-left: 2px solid var(--accent-primary);
+    background: rgba(99, 102, 241, 0.04);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .features {
+    list-style: none;
+    margin-bottom: 1rem;
+  }
+
+  .features li {
+    position: relative;
+    padding-left: 1.2rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+  }
+
+  .features li::before {
+    content: '\2726';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-primary);
+    font-size: 0.75rem;
+  }
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: auto;
+    margin-bottom: 1rem;
+  }
+
+  .tag {
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .infra-footer {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    color: #64748b;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  .infra-footer svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* EXPERIENCE TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    max-width: 800px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.4375rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--accent-primary) 0%,
+      rgba(99, 102, 241, 0.2) 30%,
+      rgba(99, 102, 241, 0.2) 70%,
+      transparent 100%
+    );
+  }
+
+  .timeline-entry {
+    position: relative;
+    padding-bottom: 2rem;
+  }
+
+  .timeline-entry:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 50%;
+    background: var(--bg-base);
+    border: 2px solid rgba(99, 102, 241, 0.4);
+    z-index: 1;
+  }
+
+  .timeline-current .timeline-dot {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 8px var(--accent-glow);
+    animation: pulse-dot 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.4), 0 0 20px rgba(99, 102, 241, 0.2);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.6), 0 0 40px rgba(99, 102, 241, 0.3);
+      transform: scale(1.3);
+    }
+  }
+
+  .timeline-content {
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    transition: border-color 0.3s ease;
+  }
+
+  .timeline-content:hover {
+    border-color: var(--card-border-hover);
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-role {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .timeline-company {
+    font-size: 0.9rem;
+    color: var(--accent-secondary);
+    font-weight: 500;
+  }
+
+  .timeline-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .timeline-period {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .timeline-location {
+    font-size: 0.75rem;
+    color: #475569;
+  }
+
+  .timeline-description {
+    font-size: 0.88rem;
+    color: #cbd5e1;
+    line-height: 1.55;
+  }
+
+  /* EDUCATION */
+  .education-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    max-width: 800px;
+    transition: border-color 0.3s ease;
+  }
+
+  .education-card:hover {
+    border-color: var(--card-border-hover);
+  }
+
+  .education-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+  }
+
+  .education-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
     margin-bottom: 0.5rem;
   }
 
-  p {
-    color: #666;
+  .education-institution {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .education-detail {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+
+  .education-title {
+    display: inline-block;
+    margin-left: 0.5rem;
+    background: rgba(168, 85, 247, 0.15);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  footer {
+    text-align: center;
+    padding: 4rem 0 2rem;
+    color: #475569;
+    font-size: 0.9rem;
+  }
+
+  /* SOLARCHARTS COMBINED CARD */
+  .solarcharts-card {
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .solarcharts-card .solarcharts-image {
+    height: 240px;
+  }
+
+  .solarcharts-content {
+    padding: 2rem 2.25rem 2.25rem;
+  }
+
+  .solarcharts-parts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .solarcharts-part {
+    padding: 1.25rem;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.015);
+  }
+
+  .part-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #a5b4fc;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding-top: 6rem;
+      flex-direction: column-reverse;
+      text-align: center;
+      align-items: center;
+    }
+    .hero-text {
+      align-items: center;
+    }
+    .hero-photo {
+      width: 240px;
+    }
+    .project-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .solarcharts-parts {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .solarcharts-content {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .solarcharts-card .solarcharts-image {
+      height: 180px;
+    }
+    .timeline {
+      padding-left: 1.5rem;
+    }
+    .timeline-dot {
+      left: -1.5rem;
+    }
+    .timeline-header {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .timeline-meta {
+      text-align: left;
+    }
+    .timeline-content {
+      padding: 1rem 1.25rem;
+    }
+    .education-card {
+      flex-direction: column;
+      padding: 1.25rem 1.5rem;
+    }
+    .education-header {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
   }
 </style>

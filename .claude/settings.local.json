@@ -4,7 +4,12 @@
       "Bash(gh auth status)",
       "Bash(git init -b main)",
       "Bash(git add -A)",
-      "Bash(git commit -m \"Initial scaffold: Astro static site with GitHub Pages deployment\")"
+      "Bash(git commit -m \"Initial scaffold: Astro static site with GitHub Pages deployment\")",
+      "Bash(gh repo create magiak/LukasKmochCz --private --source=. --push)",
+      "Bash(gh api repos/magiak/LukasKmochCz/pages -X POST -f build_type=workflow)",
+      "Bash(gh workflow run deploy.yml -R magiak/LukasKmochCz)",
+      "Bash(gh api repos/magiak/RefineEnglish)",
+      "Bash(gh api repos/magiak/RefineEnglish/languages)"
     ]
   }
 }
