@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth status)",
+      "Bash(git init -b main)",
+      "Bash(git add -A)",
+      "Bash(git commit -m \"Initial scaffold: Astro static site with GitHub Pages deployment\")"
+    ]
+  }
+}
