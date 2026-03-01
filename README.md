@@ -35,6 +35,28 @@ Deployment is automatic via GitHub Actions. Every push to `main` triggers the wo
 
 No manual steps needed — just push and it's live.
 
+## Custom domain
+
+The site is served at `lukaskmoch.cz` using a custom domain with GitHub Pages.
+
+### DNS (GoDaddy)
+
+| Type  | Name | Value               |
+|-------|------|---------------------|
+| A     | @    | `185.199.108.153`   |
+| A     | @    | `185.199.109.153`   |
+| A     | @    | `185.199.110.153`   |
+| A     | @    | `185.199.111.153`   |
+| CNAME | www  | `magiak.github.io`  |
+
+The A records point the apex domain to GitHub's servers. The CNAME record redirects `www.lukaskmoch.cz` to GitHub Pages.
+
+### GitHub Pages config
+
+- `public/CNAME` contains `lukaskmoch.cz` — this file is included in every build and tells GitHub which domain maps to this repo.
+- `astro.config.mjs` sets `site: "https://lukaskmoch.cz"` (no `base` path needed with a custom domain).
+- HTTPS is enforced via GitHub Pages settings.
+
 ## Project structure
 
 ```
