@@ -4,7 +4,7 @@ Personal portfolio website built with [Astro](https://astro.build/).
 
 ## Live site
 
-https://magiak.github.io/LukasKmochCz/
+https://lukaskmoch.cz/
 
 ## Development
 
