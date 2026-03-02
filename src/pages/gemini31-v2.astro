@@ -1,0 +1,697 @@
+---
+interface Project {
+  name: string;
+  url?: string;
+  image?: string;
+  type: "personal" | "work";
+  description: string;
+  highlight: string;
+  tech: string[];
+  features: string[];
+  infra?: string;
+}
+
+const projects: Project[] = [
+  {
+    name: "Get Content",
+    url: "https://getcontent.app",
+    image: "/images/projects/getcontent.png",
+    type: "personal",
+    description: "AI-powered marketing asset generation platform. An AI agent helps you define campaigns through chat, then a content pipeline generates images, videos with voiceovers, music, and animations — all from a single idea. The entire app was built end-to-end using AI-assisted development, showcasing what AI-powered engineering can build today.",
+    highlight: "Creating marketing content is expensive and slow. Get Content solves this with two layers of AI: first, an AI agent (Gemini/Claude) that you chat with to define what you want — it uses tools to generate files, follows best practices, and builds the campaign for you. Second, a content generation pipeline using Gemini for images and text, ElevenLabs for voiceovers, and FFmpeg to compose everything into polished videos with music. One idea in, weeks of content out.",
+    tech: ["Next.js 15", "TypeScript", "tRPC", "Prisma 6", "Tailwind CSS", "Google Gemini", "Claude", "ElevenLabs", "Playwright", "FFmpeg", "Stripe", "PostgreSQL"],
+    features: [
+      "AI agent chat — define campaigns via conversation, agent uses tools to generate output",
+      "Content pipeline — Gemini (images/text), ElevenLabs (voice), FFmpeg (video composition)",
+      "From static images to full videos with voiceovers, music, and animations",
+      "Admin dashboard with user management and billing",
+      "Credit-based + subscription billing via Stripe",
+      "Fully vibe-coded end-to-end — frontend, backend, auth, payments",
+    ],
+    infra: "GCP (e2-medium, Container-Optimized OS) · Docker · Nginx · Cloudflare · Cloud SQL",
+  },
+  {
+    name: "Refine & Learn",
+    url: "https://refineandlearn.com",
+    image: "/images/projects/refineandlearn.png",
+    type: "personal",
+    description: "AI-powered English improvement platform born from a personal need — after years of English lessons, I had no way to track my actual level, spot recurring mistakes, or measure real progress. RefineAndLearn listens to you speak, analyzes your mistakes, and gives concrete feedback on what you said wrong, where you hesitated, and which words you struggled with.",
+    highlight: "Traditional language learning gives you lessons but no real feedback loop. RefineAndLearn changes that — it listens to your speech, points out exactly where you paused or chose the wrong word, generates personalized practice exercises to target your weak spots, and tracks your progress over time. You can also discuss your learning path with AI — what to focus on next, how to reach the next level.",
+    tech: ["React 19", "TypeScript", "Vite 6", "Tailwind CSS", "Node.js", "Express", "Firebase", "Google Gemini", "OpenRouter", "Google Cloud Speech", "Google TTS", "WebSocket", "FFmpeg", "Sentry"],
+    features: [
+      "Real-time speech analysis — detects mistakes, hesitations, and word choice issues",
+      "Google Cloud Speech & TTS for voice recognition and pronunciation feedback",
+      "Multi-provider AI (Gemini + OpenRouter) for intelligent feedback and exercises",
+      "Personalized practice exercises generated from your weak spots",
+      "Progress tracking with charts — see your level and improvement trends",
+      "AI chat for learning guidance — what to focus on, how to level up",
+      "PWA support — installable on mobile, works offline",
+      "Text refinement — transforms rough text into polished, native-level English",
+    ],
+    infra: "Google Cloud Run · Docker · Cloud Build CI/CD · Firebase · Playwright E2E",
+  },
+  {
+    name: "Propeller",
+    url: "https://getonpropeller.com",
+    image: "/images/projects/propeller.png",
+    type: "work",
+    description: "SaaS for yacht charter operators. Booking lifecycle, CRM, and customer portal.",
+    highlight: "Charter operators juggle spreadsheets, emails, and manual processes to manage fleets and bookings. Propeller replaces all of that with one platform — fleet management, bookings, payments, contracts, and CRM in a single multi-tenant SaaS.",
+    tech: [".NET 8", "PostgreSQL", "Next.js 15", "Turborepo", "Stripe"],
+    features: [
+      "Fleet management & pricing calendars",
+      "Booking lifecycle with offers",
+    ],
+    infra: "AWS · GitLab CI/CD · Sentry",
+  },
+  {
+    name: "Dokempu",
+    url: "https://dokempu.cz",
+    image: "/images/projects/dokempu.png",
+    type: "work",
+    description: "Czech campsite marketplace. Search, browse, and review features.",
+    highlight: "Czech campers had no centralized place to find and compare campsites. Dokempu brings them onto one platform with geospatial search and comprehensive reviews, making it easier than ever to discover the perfect camping spot.",
+    tech: [".NET 7", "PostgreSQL", "Next.js 13", "Playwright", "OpenRouter"],
+    features: [
+      "Geospatial campsite search",
+      "Comprehensive review system",
+    ],
+    infra: "AWS · GitLab CI/CD",
+  },
+  {
+    name: "Campiri",
+    url: "https://campiri.com",
+    image: "/images/projects/campiri.png",
+    type: "work",
+    description: "Two-sided motorhome rental marketplace. Booking, payments, messaging.",
+    highlight: "Renting a campervan across Central Europe meant dealing with fragmented local operators. Campiri built a unified marketplace across 7 countries with real-time messaging, multi-gateway payments, and a booking system handling the full rental lifecycle.",
+    tech: [".NET 6", "PostgreSQL", "SignalR", "Next.js 14", "Stripe Connect"],
+    features: [
+      "Booking lifecycle with calendar",
+      "Real-time SignalR messaging",
+    ],
+    infra: "AWS & GCP · GitLab CI/CD",
+  },
+];
+
+interface Experience {
+  role: string;
+  company: string;
+  period: string;
+  location: string;
+  description: string;
+}
+
+interface Education {
+  institution: string;
+  degree: string;
+  field: string;
+  period: string;
+  title: string;
+}
+
+const experience: Experience[] = [
+  {
+    role: ".NET Developer",
+    company: "Iguana Technology",
+    period: "Apr 2019 – Present",
+    location: "Prague",
+    description: "Architect and maintain .NET backend systems, design APIs, and optimize database architecture for enterprise client projects.",
+  },
+  {
+    role: "Trainer",
+    company: "Gopas",
+    period: "Nov 2017 – Jan 2023",
+    location: "Prague",
+    description: "Taught professional development courses on .NET, C#, and web technologies to corporate teams.",
+  },
+  {
+    role: "ASP.NET MVC Developer",
+    company: "Designeo Creative s.r.o.",
+    period: "Jul 2015 – Jan 2023",
+    location: "Prague",
+    description: "Developed web applications using ASP.NET MVC, delivering custom solutions for diverse client needs.",
+  },
+  {
+    role: "Software Developer",
+    company: "Cleverlance",
+    period: "Nov 2014 – Jun 2015",
+    location: "Prague",
+    description: "Developed enterprise software for banking and insurance clients.",
+  },
+  {
+    role: "ASP.NET MVC Developer",
+    company: "Devis",
+    period: "Feb 2013 – May 2015",
+    location: "Prague",
+    description: "Built web applications with ASP.NET MVC for client projects.",
+  },
+  {
+    role: "Quality Assurance Tester",
+    company: "Siemens IT Solutions and Services",
+    period: "Jan 2011 – Jun 2011",
+    location: "Prague",
+    description: "Tested enterprise software systems and ensured quality standards.",
+  },
+];
+
+const education: Education[] = [
+  {
+    institution: "Czech Technical University in Prague",
+    degree: "Master's degree",
+    field: "Web and Software Engineering",
+    period: "2012 – 2015",
+    title: "Ing.",
+  },
+];
+
+const techCategories = [
+  { name: "Backend (.NET Core)", items: ["C#", ".NET", "ASP.NET MVC", "Razor Pages", "EF Core", "PostgreSQL", "PostGIS"] },
+  { name: "Frontend", items: ["TypeScript", "Next.js", "React", "Vue.js", "Tailwind"] },
+  { name: "Cloud & Ops", items: ["AWS", "GCP", "Docker", "GitLab CI"] },
+  { name: "Tools", items: ["Swagger", "Postman", "DBeaver", "Comgate", "Stripe", "Supabase", "Playwright", "Google Analytics", "Sentry"] },
+  { name: "AI", items: ["Claude Code", "Open Claw", "GitHub Copilot", "Google Gemini", "OpenRouter", "Ollama", "ElevenLabs", "Whisper"] },
+];
+
+const personalProjects = projects.filter((p) => p.type === "personal");
+const workProjects = projects.filter((p) => p.type === "work");
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lukáš Kmoch | .NET Developer (gemini31-v2)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #EAE8E3;
+            --text-dark: #0A0A0A;
+            --text-light: #F4F4F0;
+            --accent: #FF3B00;
+            --border-color: #0A0A0A;
+
+            --display-font: 'Anton', sans-serif;
+            --body-font: 'Newsreader', serif;
+            --mono-font: 'Space Mono', monospace;
+
+            --grid-col: 12;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            font-family: var(--body-font);
+            font-size: 1.125rem;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.25;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, .display-text {
+            font-family: var(--display-font);
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .huge-title {
+            font-size: clamp(4rem, 15vw, 12rem);
+            color: var(--text-dark);
+        }
+
+        .accent-color { color: var(--accent); }
+
+        .mono-text {
+            font-family: var(--mono-font);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: -0.02em;
+        }
+
+        /* Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            margin: 0 auto;
+            max-width: 1440px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(var(--grid-col), 1fr);
+            }
+        }
+
+        .border-b { border-bottom: 1px solid var(--border-color); }
+        .border-r { border-right: 1px solid var(--border-color); }
+
+        /* Sections */
+        .header {
+            grid-column: 1 / -1;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                grid-template-columns: repeat(12, 1fr);
+            }
+        }
+
+        .hero-title-wrapper {
+            grid-column: 1 / 9;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            .hero-title-wrapper { border-right: 1px solid var(--border-color); }
+        }
+
+        .hero-image-wrapper {
+            grid-column: 9 / -1;
+            background-color: var(--text-dark);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        .hero-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.2);
+            transition: filter 0.5s;
+        }
+
+        .hero-image-wrapper:hover img {
+            filter: grayscale(0%) contrast(1.1);
+        }
+
+        .about-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .about-section {
+                grid-template-columns: repeat(12, 1fr);
+            }
+        }
+
+        .about-sidebar {
+            grid-column: 1 / 4;
+            padding: 3rem 2rem;
+            background: var(--text-dark);
+            color: var(--text-light);
+        }
+
+        .about-content {
+            grid-column: 4 / -1;
+            padding: 4rem 2rem;
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            line-height: 1.4;
+        }
+
+        /* Experience */
+        .experience-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+        }
+        
+        .section-header-block {
+            grid-column: 1 / -1;
+            padding: 4rem 2rem;
+            background: var(--accent);
+            color: var(--text-dark);
+        }
+
+        .section-header-block h2 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--bg);
+        }
+
+        .exp-item {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 768px) {
+            .exp-item {
+                grid-template-columns: 3fr 3fr 6fr;
+            }
+            .exp-date, .exp-role {
+                border-right: 1px solid var(--border-color);
+            }
+        }
+
+        .exp-date, .exp-role, .exp-desc {
+            padding: 2rem;
+        }
+
+        .exp-date {
+            background-color: #DFDBD2;
+        }
+
+        .exp-role h3 {
+            font-size: 2rem;
+        }
+
+        .exp-role .company {
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Projects */
+        .project-block {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 768px) {
+            .project-block {
+                grid-template-columns: 5fr 7fr;
+            }
+            .project-info { border-right: 1px solid var(--border-color); }
+        }
+
+        .project-info {
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-name {
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+        }
+
+        .project-type-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+        }
+
+        .project-tech {
+            margin-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-pill {
+            padding: 0.2rem 0.5rem;
+            background: var(--text-dark);
+            color: var(--text-light);
+            font-size: 0.8rem;
+            border-radius: 2px;
+        }
+
+        .project-media {
+            padding: 2rem;
+            background: #DFDBD2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-media img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: 10px 10px 0 var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .project-media img:hover {
+            transform: translate(-5px, -5px);
+            box-shadow: 15px 15px 0 var(--accent);
+        }
+
+        /* Tech Grid */
+        .tech-categories-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .tc-block {
+            padding: 3rem 2rem;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            min-height: 250px;
+        }
+        .tc-block:nth-child(even) {
+            background-color: var(--text-dark);
+            color: var(--text-light);
+        }
+
+        .tc-block h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tc-block ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            grid-column: 1 / -1;
+            padding: 4rem 2rem;
+            text-align: center;
+            background-color: var(--text-dark);
+            color: var(--text-light);
+        }
+
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal-up.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <div class="grid-container">
+        
+        <header class="header border-b">
+            <div class="mono-text">gemini31-v2 / Bold Editorial Brutalism</div>
+            <a href="https://github.com/magiak" target="_blank" class="mono-text">G I T H U B</a>
+        </header>
+
+        <section class="hero-section border-b">
+            <div class="hero-title-wrapper reveal-up">
+                <h1 class="huge-title">LUKÁŠ<br><span class="accent-color">KMOCH</span></h1>
+                <p class="mono-text" style="font-size: 1.2rem; margin-top: 2rem;">/// SOFTWARE ENGINEER .NET / AI / FULLSTACK</p>
+            </div>
+            <div class="hero-image-wrapper">
+                <img src="/images/lukas-hero.webp" alt="Lukáš Kmoch" loading="lazy" />
+            </div>
+        </section>
+
+        <section class="about-section border-b">
+            <div class="about-sidebar">
+                <h2 class="display-text" style="font-size: 4rem; word-break: break-all;">ABOUT</h2>
+                <div class="mono-text" style="margin-top: 2rem;">
+                    LOCATION: PRAGUE<br>
+                    EXP: 15 YEARS
+                </div>
+            </div>
+            <div class="about-content reveal-up">
+                <p>Hi, I'm Lukáš. At my core, I'm a <span class="accent-color">.NET developer</span> with a deep understanding of scalable application architecture. I've helped build the backend and frontend for 10+ companies.</p>
+                <br>
+                <p>I have deep experience building .NET MVC apps, Razor pages, and robust APIs. My deepest expertise lies in my 15 years of backend architecture experience, but I've deliberately expanded toward the frontend—initially exploring Vue a few years ago before shifting my full focus to React. While frontend certainly isn't my main strength, I know enough to comfortably navigate modern UI code. By combining this knowledge with AI tooling, I can expertly review, verify, and orchestrate frontend generation. This allows me to confidently build and validate full-stack solutions end-to-end, without shifting focus away from my core backend strengths.</p>
+            </div>
+        </section>
+
+        <!-- Experience -->
+        <section class="experience-section">
+            <div class="section-header-block reveal-up border-b">
+                <h2>EXPERIENCE</h2>
+            </div>
+            {experience.map((exp, i) => (
+                <div class="exp-item reveal-up" style={`transition-delay: ${i * 0.1}s`}>
+                    <div class="exp-date mono-text">
+                        {exp.period}<br><br>{exp.location}
+                    </div>
+                    <div class="exp-role">
+                        <h3>{exp.role}</h3>
+                        <div class="company mono-text">{exp.company}</div>
+                    </div>
+                    <div class="exp-desc">
+                        {exp.description}
+                    </div>
+                </div>
+            ))}
+        </section>
+
+        <!-- Core Arsenal -->
+        <section class="experience-section">
+            <div class="section-header-block" style="background: var(--text-dark); color: var(--text-light);">
+                <h2 style="color: var(--accent);">TECH STACK</h2>
+            </div>
+            <div class="tech-categories-section">
+                {techCategories.map((cat, i) => (
+                    <div class="tc-block reveal-up" style={`transition-delay: ${i * 0.1}s`}>
+                        <h3>{cat.name}</h3>
+                        <ul class="mono-text">
+                            {cat.items.map(item => (
+                                <li>{item}</li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="experience-section">
+            <div class="section-header-block reveal-up border-b" style="background: #EAE8E3; border-bottom: 2px solid var(--border-color);">
+                <h2 style="color: var(--text-dark);">SELECTED WORKS</h2>
+            </div>
+
+            <!-- Manually added solarcharts -->
+            <div class="project-block reveal-up">
+                <div class="project-info">
+                    <span class="project-type-badge mono-text">PERSONAL</span>
+                    <h3 class="project-name">Solar Charts</h3>
+                    <p style="margin-bottom: 1.5rem">A complete solar energy monitoring ecosystem built with .NET — a data-heavy backend ingesting readings from multiple devices, a web dashboard with 40+ charts, and an physical ESP32 hardware display.</p>
+                    <div class="mono-text" style="font-size: 0.9rem; border-left: 2px solid var(--accent); padding-left: 1rem;">
+                        Oracle Cloud · Docker Compose · Nginx · PostgreSQL
+                    </div>
+                    <div class="project-tech mono-text">
+                        <span class="tech-pill">.NET</span>
+                        <span class="tech-pill">ASP.NET MVC</span>
+                        <span class="tech-pill">C#</span>
+                        <span class="tech-pill">EF Core</span>
+                        <span class="tech-pill">PostgreSQL</span>
+                    </div>
+                </div>
+                <div class="project-media">
+                    <a href="https://solarcharts.net" target="_blank">
+                        <img src="/images/projects/solarcharts.png" alt="SolarCharts screenshot" loading="lazy" />
+                    </a>
+                </div>
+            </div>
+
+            {projects.map((project, i) => (
+                <div class="project-block reveal-up" style={`transition-delay: ${i * 0.1}s`}>
+                    <div class="project-info">
+                        <span class="project-type-badge mono-text">{project.type.toUpperCase()}</span>
+                        <h3 class="project-name">{project.name}</h3>
+                        <p style="margin-bottom: 1.5rem">{project.description}</p>
+                        
+                        <div class="mono-text" style="font-size: 0.9rem; border-left: 2px solid var(--accent); padding-left: 1rem;">
+                            {project.infra || "Standard Architecture"}
+                        </div>
+
+                        <div class="project-tech mono-text">
+                            {project.tech.map(t => (
+                                <span class="tech-pill">{t}</span>
+                            ))}
+                        </div>
+                    </div>
+                    {project.image && (
+                        <div class="project-media">
+                            <a href={project.url || "#"} target="_blank">
+                                <img src={project.image} alt={project.name} loading="lazy" />
+                            </a>
+                        </div>
+                    )}
+                </div>
+            ))}
+        </section>
+
+        <!-- Education -->
+        <section class="experience-section">
+            <div class="section-header-block reveal-up border-b" style="background: var(--accent);">
+                <h2 style="color: var(--text-dark);">EDUCATION</h2>
+            </div>
+            {education.map(edu => (
+                <div class="exp-item reveal-up">
+                    <div class="exp-date mono-text">
+                        {edu.period}
+                    </div>
+                    <div class="exp-role">
+                        <h3>{edu.degree}</h3>
+                        <div class="company mono-text">{edu.institution}</div>
+                    </div>
+                    <div class="exp-desc" style="font-size: 1.5rem;">
+                        {edu.field} <br><span class="accent-color">{edu.title}</span>
+                    </div>
+                </div>
+            ))}
+        </section>
+
+        <footer class="footer">
+            <h2 class="display-text" style="font-size: 3rem; margin-bottom: 1rem;">LUKÁŠ KMOCH</h2>
+            <p class="mono-text">© {new Date().getFullYear()} / ALL RIGHTS RESERVED / BUILT WITH ASTRO</p>
+        </footer>
+    </div>
+
+    <script is:inline>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px' });
+
+            document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
