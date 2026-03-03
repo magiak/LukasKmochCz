@@ -8,7 +8,7 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,6 +24,12 @@ const { title, description } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <script is:inline>
+      (function() {
+        const saved = localStorage.getItem('theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+      })();
+    </script>
     <div class="ambient-glow"></div>
     <slot />
     <script is:inline>
@@ -69,13 +75,44 @@ const { title, description } = Astro.props;
             navObserver.observe(section);
           });
         }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          const updateToggleUI = (theme) => {
+            const icon = themeToggle.querySelector('.theme-icon');
+            const label = themeToggle.querySelector('.theme-label');
+            if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            if (label) label.textContent = theme === 'dark' ? 'Light' : 'Dark';
+          };
+          const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+          updateToggleUI(currentTheme);
+          themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateToggleUI(next);
+          });
+        }
+
+        // PDF export
+        const pdfBtn = document.getElementById('pdf-export');
+        if (pdfBtn) pdfBtn.addEventListener('click', () => window.print());
+
+        // Before printing, force all reveal elements visible (IntersectionObserver
+        // may not have fired for off-screen sections)
+        window.addEventListener('beforeprint', () => {
+          document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+        });
       });
     </script>
   </body>
 </html>
 
 <style is:global>
-  :root {
+  :root,
+  [data-theme="dark"] {
     --bg-base: #030305;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
@@ -86,6 +123,20 @@ const { title, description } = Astro.props;
     --card-bg: rgba(255, 255, 255, 0.02);
     --card-bg-hover: rgba(255, 255, 255, 0.04);
     --card-border: rgba(255, 255, 255, 0.06);
+    --card-border-hover: rgba(168, 85, 247, 0.4);
+  }
+
+  [data-theme="light"] {
+    --bg-base: #f8fafc;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --accent-primary: #6366f1;
+    --accent-secondary: #a855f7;
+    --accent-glow: rgba(99, 102, 241, 0.12);
+
+    --card-bg: rgba(0, 0, 0, 0.025);
+    --card-bg-hover: rgba(0, 0, 0, 0.045);
+    --card-border: rgba(0, 0, 0, 0.09);
     --card-border-hover: rgba(168, 85, 247, 0.4);
   }
 
@@ -109,6 +160,11 @@ const { title, description } = Astro.props;
     overflow-x: hidden;
     position: relative;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  [data-theme="light"] .ambient-glow {
+    opacity: 0;
   }
 
   .ambient-glow {

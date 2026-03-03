@@ -100,7 +100,6 @@ interface Experience {
   role: string;
   company: string;
   period: string;
-  location: string;
   description: string;
 }
 
@@ -117,14 +116,12 @@ const experience: Experience[] = [
     role: ".NET Developer",
     company: "Iguana Technology",
     period: "Apr 2019 – Present",
-    location: "Prague",
     description: "Architect and maintain .NET backend systems, design APIs, and optimize database architecture for enterprise client projects.",
   },
   {
     role: "Trainer",
     company: "Gopas",
     period: "Nov 2017 – Jan 2023",
-    location: "Prague",
     description: "Taught professional development courses on .NET, C#, and web technologies to corporate teams.",
   },
   {
@@ -133,13 +130,6 @@ const experience: Experience[] = [
     period: "Jul 2015 – Jan 2023",
     location: "Prague",
     description: "Developed web applications using ASP.NET MVC, delivering custom solutions for diverse client needs.",
-  },
-  {
-    role: "Software Developer",
-    company: "Cleverlance",
-    period: "Nov 2014 – Jun 2015",
-    location: "Prague",
-    description: "Developed enterprise software for banking and insurance clients.",
   },
   {
     role: "ASP.NET MVC Developer",
@@ -193,6 +183,20 @@ const workProjects = projects.filter((p) => p.type === "work");
         <li><a href="#tech">Tech</a></li>
         <li><a href="#projects">Work</a></li>
         <li><a href="#personal">Personal</a></li>
+        <li class="nav-divider" aria-hidden="true"></li>
+        <li>
+          <button id="theme-toggle" class="nav-icon-btn" title="Toggle light/dark theme" aria-label="Toggle theme">
+            <span class="theme-icon">☀️</span>
+            <span class="theme-label sr-only">Light</span>
+          </button>
+        </li>
+        <li>
+          <button id="pdf-export" class="nav-icon-btn" title="Export to PDF" aria-label="Export to PDF">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+        </li>
       </ul>
     </nav>
 
@@ -500,6 +504,58 @@ const workProjects = projects.filter((p) => p.type === "work");
     color: var(--text-primary);
     background: rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  }
+
+  /* NAV ICON BUTTONS (theme toggle + PDF export) */
+  .nav-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 0.25rem;
+    list-style: none;
+    align-self: center;
+  }
+
+  [data-theme="light"] .nav-divider {
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .nav-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 99px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    transition: background 0.2s, color 0.2s;
+    padding: 0;
+    font-family: inherit;
+  }
+
+  .nav-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+  }
+
+  [data-theme="light"] .nav-icon-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
   @media (max-width: 768px) {
@@ -1201,6 +1257,361 @@ const workProjects = projects.filter((p) => p.type === "work");
     .education-header {
       flex-direction: column;
       gap: 0.25rem;
+    }
+  }
+
+  /* ==============================
+     LIGHT THEME OVERRIDES
+     Hardcoded dark colors need
+     explicit overrides here.
+  ============================== */
+  [data-theme="light"] h1.gradient-text {
+    background: linear-gradient(to right, #0f172a, #475569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-theme="light"] .role {
+    color: var(--text-secondary);
+  }
+
+  [data-theme="light"] .subtitle {
+    color: #334155;
+  }
+
+  [data-theme="light"] .intro-text {
+    color: #334155;
+  }
+
+  [data-theme="light"] .intro-text strong {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .intro-text em {
+    color: var(--accent-primary);
+  }
+
+  [data-theme="light"] .linkedin-link {
+    color: var(--accent-secondary);
+  }
+
+  [data-theme="light"] .floating-nav {
+    background: rgba(248, 250, 252, 0.85);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 0 20px -5px rgba(99, 102, 241, 0.1);
+  }
+
+  [data-theme="light"] .nav-links a {
+    color: #475569;
+  }
+
+  [data-theme="light"] .nav-links a:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme="light"] .nav-links a.active-link {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.07);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme="light"] .btn.outline {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: var(--text-primary);
+  }
+
+  [data-theme="light"] .btn.outline:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  [data-theme="light"] .section-intro {
+    color: #475569;
+  }
+
+  [data-theme="light"] .glow-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  [data-theme="light"] .glow-card:hover {
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.15), 0 0 30px -10px rgba(99, 102, 241, 0.15);
+  }
+
+  [data-theme="light"] .tech-box h4 {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .tech-tag {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #334155;
+  }
+
+  [data-theme="light"] .tech-box:hover .tech-tag {
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .project-title {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .description {
+    color: #475569;
+  }
+
+  [data-theme="light"] .highlight {
+    color: #334155;
+    background: rgba(99, 102, 241, 0.05);
+    border-left-color: var(--accent-primary);
+  }
+
+  [data-theme="light"] .features li {
+    color: #334155;
+  }
+
+  [data-theme="light"] .project-tech .tag {
+    background: rgba(99, 102, 241, 0.1);
+    color: #4338ca;
+  }
+
+  [data-theme="light"] .infra-footer {
+    color: #64748b;
+    border-top-color: rgba(0, 0, 0, 0.07);
+  }
+
+  [data-theme="light"] .timeline-content {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  [data-theme="light"] .timeline-role {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .timeline-description {
+    color: #334155;
+  }
+
+  [data-theme="light"] .timeline-location {
+    color: #94a3b8;
+  }
+
+  [data-theme="light"] .timeline-dot {
+    background: #f8fafc;
+    border-color: rgba(99, 102, 241, 0.35);
+  }
+
+  [data-theme="light"] .timeline::before {
+    background: linear-gradient(
+      180deg,
+      var(--accent-primary) 0%,
+      rgba(99, 102, 241, 0.15) 30%,
+      rgba(99, 102, 241, 0.15) 70%,
+      transparent 100%
+    );
+  }
+
+  [data-theme="light"] .education-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  [data-theme="light"] .education-institution {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .education-detail {
+    color: #334155;
+  }
+
+  [data-theme="light"] .education-icon {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.18);
+  }
+
+  [data-theme="light"] .solarcharts-part {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] .part-label {
+    color: var(--accent-primary);
+  }
+
+  [data-theme="light"] footer {
+    color: #94a3b8;
+  }
+
+  [data-theme="light"] .project-image {
+    filter: brightness(1);
+  }
+
+  [data-theme="light"] .glow-card:hover .project-image {
+    filter: brightness(0.97);
+  }
+
+  [data-theme="light"] .project-image-link {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] .section-heading {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .section-heading .line {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, transparent 100%);
+  }
+
+  [data-theme="light"] .external-link {
+    color: #94a3b8;
+  }
+
+  /* ==============================
+     PRINT / PDF STYLES
+  ============================== */
+  @media print {
+    .floating-nav {
+      display: none !important;
+    }
+
+    .ambient-glow {
+      display: none !important;
+    }
+
+    /* Force all reveal elements visible */
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    /* Disable hover animations */
+    .glow-card {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Show full photo without fade */
+    .hero-photo {
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+    }
+
+    /* Hide project image wrappers entirely (removes blank space) */
+    .project-image-link {
+      display: none !important;
+    }
+
+    /* Always use desktop layout for timeline header (override mobile stacking) */
+    .timeline-header {
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: flex-start !important;
+      gap: 1rem !important;
+    }
+    .timeline-meta {
+      text-align: right !important;
+    }
+
+    /* Prevent cards from splitting across pages */
+    .glow-card,
+    .timeline-content,
+    .education-card,
+    .timeline-entry {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    section {
+      break-before: auto;
+    }
+
+    /* Hide action buttons */
+    .hero-actions {
+      display: none !important;
+    }
+
+    /* Force About section onto a new page */
+    #about {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    /* Force Experience section onto a new page */
+    #experience {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    /* Light colors for print regardless of active theme */
+    body {
+      background: white !important;
+      color: #0f172a !important;
+    }
+
+    h1.gradient-text {
+      background: linear-gradient(to right, #0f172a, #475569) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    .floating-nav,
+    .ambient-glow {
+      display: none !important;
+    }
+
+    .glow-card,
+    .timeline-content,
+    .education-card {
+      background: white !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: none !important;
+    }
+
+    .solarcharts-part {
+      background: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    .subtitle,
+    .intro-text,
+    .description,
+    .features li,
+    .timeline-description,
+    .education-detail,
+    .section-intro {
+      color: #334155 !important;
+    }
+
+    .highlight {
+      background: #f5f3ff !important;
+      border-left-color: #6366f1 !important;
+      color: #334155 !important;
+    }
+
+    .tag {
+      background: #ede9fe !important;
+      color: #4338ca !important;
+    }
+
+    .tech-tag {
+      background: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #334155 !important;
+    }
+
+    .infra-footer {
+      color: #64748b !important;
+      border-top-color: #e2e8f0 !important;
+    }
+
+    a[href]::after {
+      content: none;
+    }
+
+    @page {
+      margin: 1.5cm 1.8cm;
     }
   }
 </style>
