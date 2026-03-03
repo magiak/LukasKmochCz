@@ -33,7 +33,7 @@ npm run preview
 
 Deployment is automatic via GitHub Actions. Every push to `main` triggers the workflow at `.github/workflows/deploy.yml` which builds the site and deploys it to GitHub Pages.
 
-No manual steps needed — just push and it's live.
+No manual steps needed - just push and it's live.
 
 ## Custom domain
 
@@ -53,7 +53,7 @@ The A records point the apex domain to GitHub's servers. The CNAME record redire
 
 ### GitHub Pages config
 
-- `public/CNAME` contains `lukaskmoch.cz` — this file is included in every build and tells GitHub which domain maps to this repo.
+- `public/CNAME` contains `lukaskmoch.cz` - this file is included in every build and tells GitHub which domain maps to this repo.
 - `astro.config.mjs` sets `site: "https://lukaskmoch.cz"` (no `base` path needed with a custom domain).
 - HTTPS is enforced via GitHub Pages settings.
 
@@ -65,4 +65,4 @@ src/
 └── pages/index.astro    # landing page
 ```
 
-Astro uses file-based routing — any `.astro` file in `src/pages/` becomes a page.
+Astro uses file-based routing - any `.astro` file in `src/pages/` becomes a page.

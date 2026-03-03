@@ -1,6 +1,6 @@
 # Project: lukaskmoch.cz
 
-Personal portfolio website for Lukas Kmoch — a fullstack developer and DevOps engineer.
+Personal portfolio website for Lukas Kmoch - a fullstack developer and DevOps engineer.
 
 ## What this is
 
@@ -17,15 +17,15 @@ The site showcases personal and professional projects, tech stack, and infrastru
 
 ## Commands
 
-- `npm run dev` — local dev server (localhost:4321)
-- `npm run build` — build static site to `dist/`
-- `npm run preview` — preview build locally
+- `npm run dev` - local dev server (localhost:4321)
+- `npm run build` - build static site to `dist/`
+- `npm run preview` - preview build locally
 
 ## Project structure
 
-- `src/layouts/Base.astro` — base HTML layout (reset, system font)
-- `src/pages/index.astro` — the portfolio page (currently placeholder)
-- `public/CNAME` — custom domain config for GitHub Pages
+- `src/layouts/Base.astro` - base HTML layout (reset, system font)
+- `src/pages/index.astro` - the portfolio page (currently placeholder)
+- `public/CNAME` - custom domain config for GitHub Pages
 
 ## Key file
 
@@ -35,3 +35,7 @@ The site showcases personal and professional projects, tech stack, and infrastru
 - A few TODOs for projects still missing details (SolarCharts, RefineAndLearn)
 
 When building the portfolio page, use `PORTFOLIO_PLAN.md` as the data source.
+
+## Style rules
+
+- Never use em dashes (`—`). Use a regular hyphen (`-`) instead.
