@@ -1,0 +1,1725 @@
+---
+import type { Translations } from "../i18n/en";
+
+interface Props {
+  t: Translations;
+}
+
+const { t } = Astro.props;
+
+const personalProjects = t.projects.filter((p) => p.type === "personal");
+const workProjects = t.projects.filter((p) => p.type === "work");
+---
+
+<main class="container">
+  <nav class="floating-nav reveal">
+    <ul class="nav-links">
+      <li><a href="#home">{t.nav.home}</a></li>
+      <li><a href="#about">{t.nav.about}</a></li>
+      <li><a href="#experience">{t.nav.experience}</a></li>
+      <li><a href="#education">{t.nav.education}</a></li>
+      <li><a href="#tech">{t.nav.tech}</a></li>
+      <li><a href="#projects">{t.nav.work}</a></li>
+      <li><a href="#personal">{t.nav.personal}</a></li>
+      <li class="nav-divider" aria-hidden="true"></li>
+      <li>
+        <a href={t.nav.langHref} class="nav-lang-btn" title="Switch language / Přepnout jazyk">
+          {t.nav.langLabel}
+        </a>
+      </li>
+      <li>
+        <button id="theme-toggle" class="nav-icon-btn" title="Toggle light/dark theme" aria-label="Toggle theme">
+          <span class="theme-icon">☀️</span>
+          <span class="theme-label sr-only">Light</span>
+        </button>
+      </li>
+      <li>
+        <button id="pdf-export" class="nav-icon-btn" title="Export to PDF" aria-label="Export to PDF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <header id="home" class="hero">
+    <div class="hero-text">
+      <h1 class="gradient-text">Lukáš Kmoch</h1>
+      <h2 class="role" set:html={t.hero.role}></h2>
+
+      <div class="hero-actions">
+        <a href="#projects" class="btn primary btn-link">{t.hero.cta}</a>
+        <a href="https://github.com/magiak" target="_blank" class="btn outline btn-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+      <div class="hero-contact">
+        <a href={`mailto:${t.hero.email}`} class="hero-contact-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          {t.hero.email}
+        </a>
+        <a href={`tel:${t.hero.phone.replace(/\s/g, '')}`} class="hero-contact-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l1.98-1.98a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          {t.hero.phone}
+        </a>
+        <span class="hero-contact-link hero-contact-location">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          {t.hero.location}
+        </span>
+        <span class="hero-contact-link print-only">linkedin.com/in/lukáš-kmoch</span>
+        <span class="hero-contact-link print-only">github.com/magiak</span>
+      </div>
+    </div>
+    <div class="hero-photo-wrapper">
+      <img src="/images/lukas-hero.webp" alt="Lukáš Kmoch" class="hero-photo" width="864" height="1232" />
+    </div>
+  </header>
+
+  <!-- About Me -->
+  <section id="about">
+    <h3 class="section-heading"><span>{t.sections.about.heading}</span> <div class="line"></div></h3>
+    <div class="intro-text reveal">
+      {t.sections.about.paragraphs.map((p) => <p set:html={p}></p>)}
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience">
+    <h3 class="section-heading"><span>{t.sections.experience.heading}</span> <div class="line"></div></h3>
+    <div class="timeline">
+      {t.experience.map((exp, index) => (
+        <div class={`timeline-entry ${index === 0 ? 'timeline-current' : ''} reveal`} style={`transition-delay: ${index * 0.1}s`}>
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <div>
+                <h4 class="timeline-role">{exp.role}</h4>
+                <span class="timeline-company">{exp.company}</span>
+              </div>
+              <div class="timeline-meta">
+                <span class="timeline-period">{exp.period}</span>
+              </div>
+            </div>
+            <p class="timeline-description">{exp.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education">
+    <h3 class="section-heading"><span>{t.sections.education.heading}</span> <div class="line"></div></h3>
+    {t.education.map((edu, index) => (
+      <div class="education-card reveal" style={`transition-delay: ${index * 0.1}s`}>
+        <div class="education-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5" />
+          </svg>
+        </div>
+        <div class="education-content">
+          <div class="education-header">
+            <h4 class="education-institution">{edu.institution}</h4>
+            <span class="timeline-period">{edu.period}</span>
+          </div>
+          <p class="education-detail">
+            {edu.degree}, {edu.field}
+            <span class="education-title">{edu.title}</span>
+          </p>
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <!-- Technologies Grid -->
+  <section id="tech">
+    <h3 class="section-heading"><span>{t.sections.tech.heading}</span> <div class="line"></div></h3>
+    <div class="tech-grid">
+      {t.techCategories.map((cat, index) => (
+        <div class="tech-box glow-card reveal" style={`transition-delay: ${index * 0.1}s`}>
+          <h4>{cat.name}</h4>
+          <div class="tech-tags">
+            {cat.items.map((item) => (
+              <span class="tech-tag">{item}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Work Projects -->
+  <section id="projects">
+    <h3 class="section-heading"><span>{t.sections.projects.heading}</span> <div class="line"></div></h3>
+    <p class="section-intro">{t.sections.projects.intro}</p>
+    <div class="project-grid split">
+      {workProjects.map((project, index) => (
+        <div class="project glow-card reveal" style={`transition-delay: ${index * 0.1}s`}>
+          {project.image && (
+            <a href={project.url} target="_blank" class="project-image-link">
+              <img src={project.image} alt={`${project.name} screenshot`} class="project-image" loading="lazy" />
+            </a>
+          )}
+          <div class="project-body">
+          <div class="project-header">
+            <h4 class="project-title">
+              <span set:html={project.name}></span>
+              {project.url && <a href={project.url} target="_blank" class="external-link">↗</a>}
+            </h4>
+            <span class="badge">{t.sections.projects.badge}</span>
+          </div>
+          <p class="description">{project.description}</p>
+          <ul class="features">
+            {project.features.map(f => <li>{f}</li>)}
+          </ul>
+          <div class="project-tech">
+            {project.tech.map(techItem => <span class="tag">{techItem}</span>)}
+          </div>
+          {project.infra && <div class="infra-footer">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span>{project.infra}</span>
+          </div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Personal Projects -->
+  <section id="personal">
+    <h3 class="section-heading"><span>{t.sections.personal.heading}</span> <div class="line"></div></h3>
+    <p class="section-intro">{t.sections.personal.intro}</p>
+
+    <!-- Solar Charts - combined card -->
+    <div class="solarcharts-card glow-card reveal">
+      <a href="https://solarcharts.net" target="_blank" class="project-image-link">
+        <img src="/images/projects/solarcharts.png" alt="SolarCharts screenshot" class="project-image solarcharts-image" loading="lazy" />
+      </a>
+      <div class="solarcharts-content">
+        <div class="project-header">
+          <h4 class="project-title">
+            Solar Charts
+            <a href="https://solarcharts.net" target="_blank" class="external-link">↗</a>
+          </h4>
+          <span class="badge personal-badge">{t.sections.personal.badge}</span>
+        </div>
+        <p class="description">{t.solarCharts.description}</p>
+        <div class="solarcharts-parts">
+          <div class="solarcharts-part">
+            <h5 class="part-label">{t.solarCharts.partWeb}</h5>
+            <ul class="features">
+              {t.solarCharts.featuresWeb.map(f => <li>{f}</li>)}
+            </ul>
+            <div class="project-tech">
+              <span class="tag">.NET</span>
+              <span class="tag">ASP.NET MVC</span>
+              <span class="tag">C#</span>
+              <span class="tag">EF Core</span>
+              <span class="tag">PostgreSQL</span>
+              <span class="tag">OpenRouter</span>
+            </div>
+          </div>
+          <div class="solarcharts-part">
+            <h5 class="part-label">{t.solarCharts.partHardware}</h5>
+            <ul class="features">
+              {t.solarCharts.featuresHardware.map(f => <li>{f}</li>)}
+            </ul>
+            <div class="project-tech">
+              <span class="tag">C/C++</span>
+              <span class="tag">ESP-IDF</span>
+              <span class="tag">LVGL</span>
+              <span class="tag">ESP32</span>
+            </div>
+          </div>
+        </div>
+        <div class="infra-footer">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <span>{t.solarCharts.infra}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-grid split">
+      {personalProjects.map((project, index) => (
+        <div class="project glow-card reveal" style={`transition-delay: ${(index + 1) * 0.1}s`}>
+          {project.image && (
+            <a href={project.url} target="_blank" class="project-image-link">
+              <img src={project.image} alt={`${project.name} screenshot`} class="project-image" loading="lazy" />
+            </a>
+          )}
+          <div class="project-body">
+          <div class="project-header">
+            <h4 class="project-title">
+              <span set:html={project.name}></span>
+              {project.url && <a href={project.url} target="_blank" class="external-link">↗</a>}
+            </h4>
+            <span class="badge personal-badge">{t.sections.personal.badge}</span>
+          </div>
+          <p class="description">{project.description}</p>
+          <ul class="features">
+            {project.features.map(f => <li>{f}</li>)}
+          </ul>
+          <div class="project-tech">
+            {project.tech.map(techItem => <span class="tag">{techItem}</span>)}
+          </div>
+          {project.infra && <div class="infra-footer">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span>{project.infra}</span>
+          </div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section id="ai" style="display: none">
+    <h3 class="section-heading"><span set:html={t.sections.ai.heading}></span> <div class="line"></div></h3>
+    <p class="section-intro">{t.sections.ai.intro}</p>
+
+    <div class="ai-grid">
+      {t.aiCards.map((card, index) => (
+        <div class="glow-card ai-card reveal" style={index > 0 ? `transition-delay: ${index * 0.1}s` : ''}>
+          <div class="ai-card-icon">
+            {index === 0 && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="currentColor" stroke="none" opacity="0.3"/><circle cx="18" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+              </svg>
+            )}
+            {index === 1 && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+              </svg>
+            )}
+            {index === 2 && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            )}
+            {index === 3 && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            )}
+          </div>
+          <h4>{card.heading}</h4>
+          <p>{card.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="ai-tools">
+      <span class="tech-tag">Claude Code</span>
+      <span class="tech-tag">GitHub Copilot</span>
+      <span class="tech-tag">Google Gemini</span>
+      <span class="tech-tag">OpenRouter</span>
+      <span class="tech-tag">Ollama</span>
+      <span class="tech-tag">Claude API</span>
+      <span class="tech-tag">Open Claw</span>
+      <span class="tech-tag">ElevenLabs</span>
+      <span class="tech-tag">Whisper</span>
+      <span class="tech-tag">Prompt Engineering</span>
+    </div>
+  </section>
+
+  <footer>
+    <p>Lukáš Kmoch &copy; {new Date().getFullYear()}</p>
+  </footer>
+
+</main>
+
+<style is:global>
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 5%;
+  }
+
+  /* FLOATING NAV */
+  .floating-nav {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: rgba(3, 3, 5, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    padding: 0.5rem 0.75rem;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), 0 0 20px -5px rgba(99, 102, 241, 0.15);
+  }
+
+  /* Reset transform for reveal while keeping centering */
+  .floating-nav.reveal {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  .floating-nav.reveal.active {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 99px;
+    transition: all 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-links a.active-link {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  }
+
+  /* NAV ICON BUTTONS (theme toggle + PDF export) */
+  .nav-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 0.25rem;
+    list-style: none;
+    align-self: center;
+  }
+
+  [data-theme="light"] .nav-divider {
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .nav-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 99px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    transition: background 0.2s, color 0.2s;
+    padding: 0;
+    font-family: inherit;
+  }
+
+  .nav-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+  }
+
+  [data-theme="light"] .nav-icon-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .nav-lang-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: background 0.2s, color 0.2s;
+    letter-spacing: 0.04em;
+  }
+
+  .nav-lang-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+  }
+
+  [data-theme="light"] .nav-lang-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .floating-nav {
+      top: auto;
+      bottom: 2rem;
+      width: max-content;
+      max-width: 90%;
+    }
+    .floating-nav.reveal {
+      transform: translate(-50%, 20px);
+    }
+    .floating-nav.reveal.active {
+      transform: translate(-50%, 0);
+    }
+    .nav-links {
+      gap: 0.1rem;
+    }
+    .nav-links a {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+    }
+    /* Hide some links on mobile to fit screen */
+    .nav-links li:nth-child(4), /* Education */
+    .nav-links li:nth-child(5) /* Tech */ {
+      display: none;
+    }
+  }
+
+  /* HERO */
+  .hero {
+    padding: 12vh 0 4vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    position: relative;
+    min-height: 480px;
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 600px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-photo-wrapper {
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .hero-photo {
+    width: 340px;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+
+  h1.gradient-text {
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.03em;
+  }
+
+  .role {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 5rem;
+  }
+
+  .intro-text {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    max-width: 760px;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .intro-text strong {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .intro-text em {
+    color: #a5b4fc;
+    font-style: normal;
+  }
+
+  .linkedin-link {
+    color: var(--accent-secondary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s;
+  }
+  .linkedin-link:hover {
+    color: var(--text-primary);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-contact {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .hero-contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .hero-contact-link:hover {
+    color: var(--text-primary);
+  }
+
+  .hero-contact-location {
+    cursor: default;
+  }
+  .hero-contact-location:hover {
+    color: var(--text-secondary);
+  }
+
+  .print-only {
+    display: none !important;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn.primary {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    color: white;
+    box-shadow: 0 10px 30px -10px var(--accent-glow);
+  }
+
+  .btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px -10px rgba(168, 85, 247, 0.5);
+    filter: brightness(1.1);
+  }
+
+  .btn.outline {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-primary);
+  }
+
+  .btn.outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 4rem 0;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+  }
+
+  .section-heading .line {
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--card-border) 0%, transparent 100%);
+  }
+
+  .section-intro {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 720px;
+    margin-top: -1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* GLOW CARDS */
+  .glow-card {
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glow-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .glow-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--card-border-hover);
+    background: var(--card-bg-hover);
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5), 0 0 40px -10px var(--accent-glow);
+  }
+
+  .glow-card:hover::before {
+    opacity: 1;
+  }
+
+  /* TECH GRID */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .tech-box {
+    padding: 1rem 1.2rem;
+  }
+  .tech-box h4 {
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    margin-bottom: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tech-tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #cbd5e1;
+    padding: 0.2rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tech-box:hover .tech-tag {
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #fff;
+  }
+
+  /* PROJECT GRID */
+  .project-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media(min-width: 900px) {
+    .project-grid.split {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .project {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .project-body {
+    padding: 2rem 2.25rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .project-image-link {
+    display: block;
+    overflow: hidden;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .project-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: brightness(0.85);
+  }
+
+  .glow-card:hover .project-image {
+    transform: scale(1.03);
+    filter: brightness(1);
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  .project-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .external-link {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    transition: color 0.2s;
+  }
+  .external-link:hover {
+    color: var(--accent-secondary);
+  }
+
+  .badge {
+    background: rgba(168, 85, 247, 0.15);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .personal-badge {
+    background: rgba(56, 189, 248, 0.1);
+    color: #7dd3fc;
+    border-color: rgba(56, 189, 248, 0.2);
+  }
+
+  .description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .highlight {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #cbd5e1;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    border-left: 2px solid var(--accent-primary);
+    background: rgba(99, 102, 241, 0.04);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .features {
+    list-style: none;
+    margin-bottom: 1rem;
+  }
+
+  .features li {
+    position: relative;
+    padding-left: 1.2rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+  }
+
+  .features li::before {
+    content: '\2726';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-primary);
+    font-size: 0.75rem;
+  }
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: auto;
+    margin-bottom: 1rem;
+  }
+
+  .tag {
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .infra-footer {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    color: #64748b;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  .infra-footer svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* EXPERIENCE TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    max-width: 800px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.4375rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--accent-primary) 0%,
+      rgba(99, 102, 241, 0.2) 30%,
+      rgba(99, 102, 241, 0.2) 70%,
+      transparent 100%
+    );
+  }
+
+  .timeline-entry {
+    position: relative;
+    padding-bottom: 2rem;
+  }
+
+  .timeline-entry:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 50%;
+    background: var(--bg-base);
+    border: 2px solid rgba(99, 102, 241, 0.4);
+    z-index: 1;
+  }
+
+  .timeline-current .timeline-dot {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 8px var(--accent-glow);
+    animation: pulse-dot 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.4), 0 0 20px rgba(99, 102, 241, 0.2);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.6), 0 0 40px rgba(99, 102, 241, 0.3);
+      transform: scale(1.3);
+    }
+  }
+
+  .timeline-content {
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    transition: border-color 0.3s ease;
+  }
+
+  .timeline-content:hover {
+    border-color: var(--card-border-hover);
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-role {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .timeline-company {
+    font-size: 0.9rem;
+    color: var(--accent-secondary);
+    font-weight: 500;
+  }
+
+  .timeline-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .timeline-period {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .timeline-location {
+    font-size: 0.75rem;
+    color: #475569;
+  }
+
+  .timeline-description {
+    font-size: 0.88rem;
+    color: #cbd5e1;
+    line-height: 1.55;
+  }
+
+  /* EDUCATION */
+  .education-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    max-width: 800px;
+    transition: border-color 0.3s ease;
+  }
+
+  .education-card:hover {
+    border-color: var(--card-border-hover);
+  }
+
+  .education-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+  }
+
+  .education-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .education-institution {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .education-detail {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+
+  .education-title {
+    display: inline-block;
+    margin-left: 0.5rem;
+    background: rgba(168, 85, 247, 0.15);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  /* AI SECTION */
+  .ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .ai-card {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .ai-card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    flex-shrink: 0;
+  }
+
+  .ai-card h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .ai-card p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  .ai-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 4rem 0 2rem;
+    color: #475569;
+    font-size: 0.9rem;
+  }
+
+  /* SOLARCHARTS COMBINED CARD */
+  .solarcharts-card {
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .solarcharts-card .solarcharts-image {
+    height: 240px;
+  }
+
+  .solarcharts-content {
+    padding: 2rem 2.25rem 2.25rem;
+  }
+
+  .solarcharts-parts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .solarcharts-part {
+    padding: 1.25rem;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.015);
+  }
+
+  .part-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #a5b4fc;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding-top: 6rem;
+      flex-direction: column-reverse;
+      text-align: center;
+      align-items: center;
+    }
+    .hero-text {
+      align-items: center;
+    }
+    .hero-photo {
+      width: 240px;
+    }
+    .project-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .solarcharts-parts {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .solarcharts-content {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .solarcharts-card .solarcharts-image {
+      height: 180px;
+    }
+    .timeline {
+      padding-left: 1.5rem;
+    }
+    .timeline-dot {
+      left: -1.5rem;
+    }
+    .timeline-header {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .timeline-meta {
+      text-align: left;
+    }
+    .timeline-content {
+      padding: 1rem 1.25rem;
+    }
+    .education-card {
+      flex-direction: column;
+      padding: 1.25rem 1.5rem;
+    }
+    .education-header {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .tech-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ==============================
+     LIGHT THEME OVERRIDES
+     Hardcoded dark colors need
+     explicit overrides here.
+  ============================== */
+  [data-theme="light"] h1.gradient-text {
+    background: linear-gradient(to right, #0f172a, #475569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-theme="light"] .role {
+    color: var(--text-secondary);
+  }
+
+  [data-theme="light"] .intro-text {
+    color: #334155;
+  }
+
+  [data-theme="light"] .intro-text strong {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .intro-text em {
+    color: var(--accent-primary);
+  }
+
+  [data-theme="light"] .linkedin-link {
+    color: var(--accent-secondary);
+  }
+
+  [data-theme="light"] .hero-contact-link {
+    border-color: rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  [data-theme="light"] .hero-contact-link:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-primary);
+  }
+
+  [data-theme="light"] .floating-nav {
+    background: rgba(248, 250, 252, 0.85);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 0 20px -5px rgba(99, 102, 241, 0.1);
+  }
+
+  [data-theme="light"] .nav-links a {
+    color: #475569;
+  }
+
+  [data-theme="light"] .nav-links a:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme="light"] .nav-links a.active-link {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.07);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  }
+
+  [data-theme="light"] .btn.outline {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: var(--text-primary);
+  }
+
+  [data-theme="light"] .btn.outline:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  [data-theme="light"] .section-intro {
+    color: #475569;
+  }
+
+  [data-theme="light"] .glow-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  [data-theme="light"] .glow-card:hover {
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.15), 0 0 30px -10px rgba(99, 102, 241, 0.15);
+  }
+
+  [data-theme="light"] .tech-box h4 {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .tech-tag {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #334155;
+  }
+
+  [data-theme="light"] .tech-box:hover .tech-tag {
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .project-title {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .description {
+    color: #475569;
+  }
+
+  [data-theme="light"] .highlight {
+    color: #334155;
+    background: rgba(99, 102, 241, 0.05);
+    border-left-color: var(--accent-primary);
+  }
+
+  [data-theme="light"] .features li {
+    color: #334155;
+  }
+
+  [data-theme="light"] .project-tech .tag {
+    background: rgba(99, 102, 241, 0.1);
+    color: #4338ca;
+  }
+
+  [data-theme="light"] .infra-footer {
+    color: #64748b;
+    border-top-color: rgba(0, 0, 0, 0.07);
+  }
+
+  [data-theme="light"] .timeline-content {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  [data-theme="light"] .timeline-role {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .timeline-description {
+    color: #334155;
+  }
+
+  [data-theme="light"] .timeline-location {
+    color: #94a3b8;
+  }
+
+  [data-theme="light"] .timeline-dot {
+    background: #f8fafc;
+    border-color: rgba(99, 102, 241, 0.35);
+  }
+
+  [data-theme="light"] .timeline::before {
+    background: linear-gradient(
+      180deg,
+      var(--accent-primary) 0%,
+      rgba(99, 102, 241, 0.15) 30%,
+      rgba(99, 102, 241, 0.15) 70%,
+      transparent 100%
+    );
+  }
+
+  [data-theme="light"] .education-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  [data-theme="light"] .education-institution {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .education-detail {
+    color: #334155;
+  }
+
+  [data-theme="light"] .education-icon {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.18);
+  }
+
+  [data-theme="light"] .solarcharts-part {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] .part-label {
+    color: var(--accent-primary);
+  }
+
+  [data-theme="light"] .ai-card p {
+    color: var(--text-secondary);
+  }
+
+  [data-theme="light"] footer {
+    color: #94a3b8;
+  }
+
+  [data-theme="light"] .project-image {
+    filter: brightness(1);
+  }
+
+  [data-theme="light"] .glow-card:hover .project-image {
+    filter: brightness(0.97);
+  }
+
+  [data-theme="light"] .project-image-link {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] .section-heading {
+    color: #0f172a;
+  }
+
+  [data-theme="light"] .section-heading .line {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, transparent 100%);
+  }
+
+  [data-theme="light"] .external-link {
+    color: #94a3b8;
+  }
+
+  /* ==============================
+     PRINT / PDF STYLES
+  ============================== */
+  @media print {
+    .floating-nav {
+      display: none !important;
+    }
+
+    .hero-actions {
+      display: none !important;
+    }
+
+    .ambient-glow {
+      display: none !important;
+    }
+
+    /* Force all reveal elements visible */
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      transition-delay: 0s !important;
+    }
+
+    /* Disable hover animations + GPU compositing that breaks Chrome print renderer */
+    .glow-card {
+      transform: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      overflow: visible !important;
+    }
+
+    /* Ensure Chrome preserves our explicit background/color overrides */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Fix tech-box h4 which has explicit near-white color in dark theme */
+    .tech-box h4 {
+      color: #374151 !important;
+      opacity: 1 !important;
+    }
+
+    /* Show full photo without fade */
+    .hero-photo {
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+    }
+
+    /* Hide project image wrappers entirely (removes blank space) */
+    .project-image-link {
+      display: none !important;
+    }
+
+    /* Always use desktop layout for timeline header (override mobile stacking) */
+    .timeline-header {
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: flex-start !important;
+      gap: 1rem !important;
+    }
+    .timeline-meta {
+      text-align: right !important;
+    }
+
+    /* Compact experience timeline for print */
+    #experience .section-heading {
+      margin-bottom: 1.25rem;
+    }
+    .timeline-entry {
+      padding-bottom: 0.75rem;
+    }
+    .timeline-content {
+      padding: 0.85rem 1.25rem;
+    }
+    .timeline-header {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Prevent cards from splitting across pages */
+    .glow-card,
+    .timeline-content,
+    .education-card,
+    .timeline-entry {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    section {
+      break-before: auto;
+    }
+
+    /* Hide action buttons */
+    .hero-actions {
+      display: none !important;
+    }
+
+    /* Force About section onto a new page */
+    #about {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    /* Force Experience section onto a new page */
+    #experience {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    /* Force Education section onto a new page */
+    #education {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    /* Side-by-side layout for Get Content + Refine & Learn */
+    #personal .project-grid.split {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    #personal .project-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    #personal .description {
+      font-size: 0.82rem;
+    }
+    #personal .features li {
+      font-size: 0.8rem;
+    }
+
+    /* Compact tech section to fit on same page as education */
+    #tech {
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+    #tech .tech-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+    }
+    #tech .tech-box {
+      padding: 0.65rem 0.9rem;
+    }
+    #tech .tech-tags {
+      gap: 0.25rem;
+    }
+    #tech .tech-tag {
+      padding: 0.1rem 0.4rem;
+      font-size: 0.7rem;
+    }
+    #tech .section-heading {
+      margin-bottom: 1rem;
+    }
+
+    /* Hide footer and external link arrows */
+    footer {
+      display: none !important;
+    }
+
+    .external-link {
+      display: none !important;
+    }
+
+    /* Light colors for print regardless of active theme */
+    body {
+      background: white !important;
+      color: #0f172a !important;
+    }
+
+    h1.gradient-text {
+      background: linear-gradient(to right, #0f172a, #475569) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    .floating-nav,
+    .ambient-glow {
+      display: none !important;
+    }
+
+    .glow-card,
+    .timeline-content,
+    .education-card {
+      background: white !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: none !important;
+    }
+
+    .solarcharts-part {
+      background: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    .project-title {
+      color: #0f172a !important;
+    }
+
+    .intro-text,
+    .intro-text strong,
+    .description,
+    .features li,
+    .timeline-role,
+    .timeline-description,
+    .education-institution,
+    .education-detail,
+    .ai-card h4,
+    .section-intro {
+      color: #334155 !important;
+    }
+
+    .highlight {
+      background: #f5f3ff !important;
+      border-left-color: #6366f1 !important;
+      color: #334155 !important;
+    }
+
+    .tag {
+      background: #ede9fe !important;
+      color: #4338ca !important;
+    }
+
+    .tech-tag {
+      background: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #334155 !important;
+    }
+
+    .infra-footer {
+      color: #64748b !important;
+      border-top-color: #e2e8f0 !important;
+    }
+
+    a[href]::after {
+      content: none;
+    }
+
+    /* Show social URL text in print */
+    .print-only {
+      display: flex !important;
+    }
+
+    @page {
+      margin: 1.5cm 1.8cm;
+    }
+  }
+</style>

@@ -1,0 +1,9 @@
+---
+import Base from "../../layouts/Base.astro";
+import Portfolio from "../../components/Portfolio.astro";
+import { t } from "../../i18n/cs";
+---
+
+<Base title={t.meta.title} description={t.meta.description} lang="cs">
+  <Portfolio t={t} />
+</Base>

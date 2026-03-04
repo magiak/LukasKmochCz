@@ -3,7 +3,8 @@
     "allow": [
       "Bash(node screenshot.mjs)",
       "Bash(npm run build)",
-      "Bash(ffmpeg *)"
+      "Bash(ffmpeg *)",
+      "Read(//c/Users/lukas/.claude/projects/*)"
     ]
   }
 }

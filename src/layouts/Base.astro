@@ -2,13 +2,14 @@
 interface Props {
   title: string;
   description?: string;
+  lang?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, lang = "en" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang={lang} data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -96,15 +97,43 @@ const { title, description } = Astro.props;
           });
         }
 
-        // PDF export
-        const pdfBtn = document.getElementById('pdf-export');
-        if (pdfBtn) pdfBtn.addEventListener('click', () => window.print());
+        // Force all reveal elements visible immediately (no transitions).
+        // Used before printing so Chrome paints everything before the dialog opens.
+        function forceRevealAll() {
+          document.querySelectorAll('.reveal').forEach(el => {
+            el.style.transition = 'none';
+            el.style.transitionDelay = '0s';
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+            el.classList.add('active');
+          });
+          // Force synchronous reflow so styles are applied before returning
+          document.body.offsetHeight;
+        }
 
-        // Before printing, force all reveal elements visible (IntersectionObserver
-        // may not have fired for off-screen sections)
-        window.addEventListener('beforeprint', () => {
-          document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-        });
+        function clearRevealOverrides() {
+          document.querySelectorAll('.reveal').forEach(el => {
+            el.style.transition = '';
+            el.style.transitionDelay = '';
+            el.style.opacity = '';
+            el.style.transform = '';
+          });
+        }
+
+        // PDF export button: prepare DOM first, then wait two frames for the
+        // browser to paint before opening the print dialog.
+        const pdfBtn = document.getElementById('pdf-export');
+        if (pdfBtn) {
+          pdfBtn.addEventListener('click', () => {
+            forceRevealAll();
+            requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+          });
+        }
+
+        // Ctrl+P fallback: beforeprint fires synchronously, so we still apply
+        // the fix here for keyboard-triggered prints.
+        window.addEventListener('beforeprint', forceRevealAll);
+        window.addEventListener('afterprint', clearRevealOverrides);
       });
     </script>
   </body>
@@ -207,6 +236,7 @@ const { title, description } = Astro.props;
     text-decoration: none;
   }
 
+  /* TEMPORARILY COMMENTED OUT to test if reveal animation is the print issue
   .reveal {
     opacity: 0;
     transform: translateY(30px);
@@ -217,4 +247,5 @@ const { title, description } = Astro.props;
     opacity: 1;
     transform: translateY(0);
   }
+  */
 </style>
