@@ -32,7 +32,7 @@ export const t: Translations = {
     about: {
       heading: "O mně",
       paragraphs: [
-        `Ahoj, jsem Lukáš. V jádru jsem <strong>.NET vývojář</strong> s hlubokým porozuměním škálovatelné aplikační architektury. Pomohl jsem budovat backend a frontend pro více než 20 firem.`,
+        `Ahoj, jsem Lukáš. Ve svém jádru jsem <strong>.NET vývojář</strong> s hlubokým porozuměním škálovatelné aplikační architektury. Pomohl jsem budovat backend a frontend pro více než 20 firem.`,
         `Mám hluboké zkušenosti s vývojem REST API, .NET MVC aplikací, Razor stránek a robustních backendů. Moje nejhlubší odbornost spočívá v 15 letech zkušeností s backendovou architekturou, ale záměrně jsem se rozšiřoval i směrem k frontendu - chvíli jsem používal Vue, než jsem svou plnou pozornost přesunul na React. I když frontend rozhodně není moje hlavní doména, vím toho dost, abych se v moderním UI kódu pohodlně orientoval.`,
         `Jsem technologický nadšenec, který miluje učení i vyučování. Více než 5 let jsem vedl kurzy .NET a webového vývoje ve společnosti <strong>Gopas</strong> a pomáhal firemním týmům zvyšovat jejich inženýrské dovednosti. Dnes sdílím své poznatky zcela otevřeně - pravidelně přispívám na svůj <a href="https://www.linkedin.com/in/luk%C3%A1%C5%A1-kmoch/" target="_blank" class="linkedin-link">LinkedIn profil</a> a hluboce experimentuji s AI aplikacemi, Claude Code a OpenClaw.`,
       ],
