@@ -30,9 +30,9 @@ export const t = {
     about: {
       heading: "About Me",
       paragraphs: [
-        `Hi, I'm Lukáš. At my core, I'm a <strong>.NET developer</strong> with a deep understanding of scalable application architecture. I've helped build the backend and frontend for 20+ companies.`,
-        `I have deep experience building REST APIs, .NET MVC apps, Razor pages, and robust backends. My deepest expertise lies in my 15 years of backend architecture experience, but I've deliberately expanded toward the frontend - using Vue briefly before shifting my full focus to React. While frontend certainly isn't my main strength, I know enough to comfortably navigate modern UI code.`,
-        `I'm a tech enthusiast who loves both learning and teaching. For over 5 years, I led .NET and web development courses at <strong>Gopas</strong>, helping corporate teams level up their engineering skills. Today, I share my learnings entirely in the open-posting regularly on my <a href="https://www.linkedin.com/in/luk%C3%A1%C5%A1-kmoch/" target="_blank" class="linkedin-link">LinkedIn profile</a> and experimenting deeply with AI applications, Claude Code agents, and OpenClaw.`,
+        `Hi, I'm Lukáš. I'm a <strong>.NET developer</strong> with 15 years of experience. I've helped build applications for over 20 companies.`,
+        `My main domain is backend – REST APIs, .NET MVC, and overall system architecture. Over time, I've also dug into the frontend. I experimented with Vue before settling on React. Even though I'm not primarily a frontend developer, I can comfortably navigate modern UI code and build an application from A to Z.`,
+        `Beyond programming, I also enjoy teaching. For over 5 years, I led .NET and web development courses at <strong>Gopas</strong>. Today, I occasionally share insights on my <a href="https://www.linkedin.com/in/luk%C3%A1%C5%A1-kmoch/" target="_blank" class="linkedin-link">LinkedIn profile</a> and in my free time I heavily test what AI tools (Claude Code, OpenClaw) can realistically do and how best to integrate them into daily development.`,
       ],
     },
     experience: { heading: "Experience" },
