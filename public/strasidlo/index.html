@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b0b10">
+<title>Strašidlo</title>
+<style>
+  :root {
+    --bg: #0b0b10;
+    --card: #16161f;
+    --line: #2a2a38;
+    --text: #ececf3;
+    --muted: #8d8da3;
+    --accent: #ff7a1a;
+    --ok: #3ddc84;
+    --bad: #ff5252;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    max-width: 640px; margin: 0 auto;
+  }
+  h1 { font-size: 22px; margin: 0 0 12px; }
+  h2 { font-size: 15px; color: var(--muted); font-weight: 600; margin: 24px 0 8px; text-transform: uppercase; letter-spacing: .04em; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .status { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; }
+  .status dt { color: var(--muted); }
+  .status dd { margin: 0; text-align: right; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; background: var(--muted); }
+  .dot.ok { background: var(--ok); }
+  .dot.bad { background: var(--bad); }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .video {
+    position: relative; padding: 0; border: 2px solid var(--line); border-radius: 12px; overflow: hidden;
+    background: #000; color: var(--text); font: inherit; cursor: pointer; aspect-ratio: 16 / 9;
+  }
+  .video img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video span {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 8px; font-size: 13px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, .85)); text-align: left;
+  }
+  .video.playing { border-color: var(--accent); }
+  .video.pending { border-color: var(--muted); border-style: dashed; }
+  .tile { position: relative; }
+  .tile .video { display: block; width: 100%; }
+  .del {
+    position: absolute; top: 6px; right: 6px; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%;
+    background: rgba(0, 0, 0, .7); color: var(--text); font: inherit; font-size: 16px; cursor: pointer;
+  }
+  form { display: flex; gap: 8px; margin-top: 10px; }
+  input {
+    flex: 1; min-width: 0; padding: 12px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); font: inherit;
+  }
+  button.primary {
+    padding: 12px 16px; border: 0; border-radius: 10px; background: var(--accent); color: #111;
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .note { color: var(--muted); font-size: 14px; margin: 8px 0 0; }
+  .error { color: var(--bad); }
+  .frame {
+    position: relative; aspect-ratio: 16 / 9; margin: 10px 8px; background: #000; border: 1px solid var(--line);
+    touch-action: none; user-select: none; -webkit-user-select: none;
+  }
+  .frame svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .frame polygon { fill-opacity: .25; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .handle {
+    position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; touch-action: none;
+    display: flex; align-items: center; justify-content: center; cursor: grab;
+  }
+  .handle::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: currentColor; border: 2px solid #fff; }
+  .handle.first::after { width: 22px; height: 22px; }
+  .check { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+  .check input { flex: none; width: 22px; height: 22px; padding: 0; }
+  #log { font: 12px/1.45 ui-monospace, Consolas, monospace; white-space: pre-wrap; word-break: break-word; max-height: 50vh; overflow: auto; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<h1>👻 Strašidlo v okně</h1>
+
+<section id="setup" hidden>
+  <div class="card">
+    <p style="margin-top:0">Chybí klíč. Otevři odkaz s klíčem, nebo ho vlož sem:</p>
+    <form id="keyForm">
+      <input id="keyInput" autocomplete="off" placeholder="klíč">
+      <button class="primary">Uložit</button>
+    </form>
+  </div>
+</section>
+
+<main id="app" hidden>
+  <div class="card">
+    <dl class="status">
+      <dt>Tablet</dt><dd id="online">načítám…</dd>
+      <dt>Projektor</dt><dd id="showing">-</dd>
+      <dt>Baterie</dt><dd id="battery">-</dd>
+      <dt>Další změna</dt><dd id="next">-</dd>
+    </dl>
+    <p id="error" class="note error" hidden></p>
+  </div>
+
+  <h2>Videa</h2>
+  <div id="videos" class="grid"></div>
+  <p id="pendingNote" class="note" hidden></p>
+  <form id="addForm">
+    <input id="addInput" inputmode="url" autocomplete="off" placeholder="Odkaz na YouTube video">
+    <button class="primary">Pustit</button>
+  </form>
+
+  <h2>Okna</h2>
+  <div class="card">
+    <div id="frame" class="frame"><svg id="shapes" viewBox="0 0 1 1" preserveAspectRatio="none"></svg></div>
+    <label class="check"><input type="checkbox" id="obrys"> Ukázat obrysy na okně</label>
+    <label class="check"><input type="checkbox" id="maska"> Promítat jen do skel</label>
+    <p class="note">Černý obdélník je celá projekce. Zapni obrysy a táhni rohy, dokud nesednou na skla. Velká tečka je roh 1, na okně je taky velká.</p>
+  </div>
+
+  <h2>Záznam z tabletu</h2>
+  <div class="card"><div id="log">-</div></div>
+</main>
+
+<script>
+  const DB = 'https://lukaskmoch-default-rtdb.firebaseio.com/strasidlo/';
+  const KEY_STORE = 'strasidlo-klic';
+  // The tablet sends its state at least every 20 s; three missed rounds means it is off or without Wi-Fi.
+  const OFFLINE_MS = 60000;
+  const ID_RE = /(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([A-Za-z0-9_-]{11})|^([A-Za-z0-9_-]{11})$/;
+
+  const $ = (id) => document.getElementById(id);
+  let key = null;
+  let state = null;
+  let pending = null;
+  let removing = null;
+  let stream = null;
+  let videosShown = '';
+  let logTimer = null;
+  const PANE_COLORS = ['#ff7a1a', '#3ddc84'];
+  // Corners clockwise from top left, as 0..1 of the projected image: x1, y1, ... x4, y4.
+  const DEFAULT_PANES = [[0.1, 0.1, 0.45, 0.1, 0.45, 0.9, 0.1, 0.9], [0.55, 0.1, 0.9, 0.1, 0.9, 0.9, 0.55, 0.9]];
+  let panes = null;
+  let panesSending = false;
+  let panesDirty = false;
+
+  function parseId(text) {
+    const m = ID_RE.exec(text.trim());
+    return m ? (m[1] || m[2]) : null;
+  }
+
+  function loadKey() {
+    const fromLink = new URLSearchParams(location.hash.slice(1)).get('k');
+    try {
+      if (fromLink) localStorage.setItem(KEY_STORE, fromLink);
+      return fromLink || localStorage.getItem(KEY_STORE);
+    } catch (e) {
+      return fromLink;
+    }
+  }
+
+  function url(path) {
+    return DB + encodeURIComponent(key) + path;
+  }
+
+  async function api(path, options) {
+    const r = await fetch(url(path), options);
+    const body = await r.json();
+    if (!r.ok || (body && body.error)) throw new Error(body && body.error ? body.error : 'HTTP ' + r.status);
+    return body;
+  }
+
+  function showError(text) {
+    $('error').textContent = text || '';
+    $('error').hidden = !text;
+  }
+
+  function time(ms) {
+    const d = new Date(ms);
+    const hm = d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+    return d.toDateString() === new Date().toDateString() ? hm : d.getDate() + '. ' + (d.getMonth() + 1) + '. ' + hm;
+  }
+
+  function ago(ms) {
+    const s = Math.max(0, Math.round((Date.now() - ms) / 1000));
+    if (s < 90) return 'před ' + s + ' s';
+    if (s < 5400) return 'před ' + Math.round(s / 60) + ' min';
+    return 'v ' + time(ms);
+  }
+
+  function isOnline() {
+    return state && Date.now() - state.cas < OFFLINE_MS;
+  }
+
+  function renderStatus() {
+    const note = $('pendingNote');
+    note.hidden = !pending;
+    if (pending) {
+      note.textContent = isOnline() ? 'Odesláno, tablet přepíná.' : 'Odesláno. Tablet je offline, přepne se, až se připojí.';
+    }
+    if (!state) {
+      $('online').innerHTML = '<span class="dot bad"></span>ještě se nehlásil';
+      return;
+    }
+    const online = isOnline();
+    $('online').innerHTML = '<span class="dot ' + (online ? 'ok' : 'bad') + '"></span>' + (online ? 'online' : 'offline') + ', ' + ago(state.cas);
+    $('showing').textContent = state.strasi ? 'promítá' : (state.slabaBaterie ? 'spí, slabá baterie' : 'spí');
+    $('battery').textContent = state.baterie + ' %' + (state.nabiji ? ', nabíjí se' : '');
+    $('next').textContent = state.dalsiZmena ? time(state.dalsiZmena) : '-';
+  }
+
+  function label(id) {
+    if (id === removing) return 'mažu…';
+    if (id === pending) return 'tablet přepíná…';
+    if (id !== state.video) return id;
+    if (!state.strasi) return 'vybráno, spí';
+    return state.prehravac === 1 ? '▶ hraje' : 'načítá se…';
+  }
+
+  // Rebuilt only when something on the tiles changes, so a tap never lands on a tile that is being replaced.
+  function renderVideos() {
+    if (!state) return;
+    const list = (state.seznam || []).slice();
+    if (pending && !list.includes(pending)) list.unshift(pending);
+    const shown = JSON.stringify([list, state.video, state.strasi, state.prehravac, pending, removing]);
+    if (shown === videosShown) return;
+    videosShown = shown;
+    $('videos').replaceChildren(...list.map((id) => {
+      const b = document.createElement('button');
+      b.className = 'video' + (id === state.video && id !== pending ? ' playing' : '') + (id === pending ? ' pending' : '');
+      const img = document.createElement('img');
+      img.src = 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg';
+      img.alt = '';
+      img.loading = 'lazy';
+      const span = document.createElement('span');
+      span.textContent = label(id);
+      b.append(img, span);
+      b.addEventListener('click', () => play(id));
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.append(b);
+      // The last video stays, so the window never falls back to the spare file by accident.
+      if (list.length > 1 && id !== removing) {
+        const del = document.createElement('button');
+        del.className = 'del';
+        del.textContent = '✕';
+        del.title = 'Smazat ze seznamu';
+        del.addEventListener('click', () => remove(id));
+        tile.append(del);
+      }
+      return tile;
+    }));
+  }
+
+  function render() {
+    if (state && pending && state.video === pending) pending = null;
+    if (state && removing && !(state.seznam || []).includes(removing)) removing = null;
+    renderStatus();
+    renderVideos();
+  }
+
+  async function loadLog() {
+    try {
+      const log = await api('/log.json?orderBy=%22$key%22&limitToLast=40');
+      const lines = log ? Object.keys(log).sort().reverse().map((k) => log[k]) : [];
+      $('log').textContent = lines.length ? lines.join('\n') : 'zatím nic';
+    } catch (e) {
+      showError('Nejde načíst záznam: ' + e.message);
+    }
+  }
+
+  function loadLogSoon() {
+    clearTimeout(logTimer);
+    logTimer = setTimeout(loadLog, 500);
+  }
+
+  function setAt(node, parts, value) {
+    if (!parts.length) return value;
+    const copy = Array.isArray(node) ? node.slice() : Object.assign({}, node);
+    if (value === null && parts.length === 1) delete copy[parts[0]];
+    else copy[parts[0]] = setAt(copy[parts[0]], parts.slice(1), value);
+    return copy;
+  }
+
+  // Firebase REST streaming: "put" replaces the value at path, "patch" merges children into it.
+  function applyEvent(e, merge) {
+    const msg = JSON.parse(e.data);
+    const parts = msg.path.split('/').filter(Boolean);
+    if (merge) {
+      for (const k of Object.keys(msg.data || {})) state = setAt(state, parts.concat(k), msg.data[k]);
+    } else {
+      state = setAt(state, parts, msg.data);
+    }
+    showError('');
+    render();
+    loadLogSoon();
+  }
+
+  function openStream() {
+    if (stream) stream.close();
+    stream = new EventSource(url('/stav.json'));
+    stream.addEventListener('put', (e) => applyEvent(e, false));
+    stream.addEventListener('patch', (e) => applyEvent(e, true));
+    stream.addEventListener('cancel', () => showError('Firebase spojení odmítl. Je klíč správný?'));
+    stream.onerror = () => showError('Spojení vypadlo, zkouším znovu…');
+  }
+
+  async function send(command) {
+    showError('');
+    render();
+    try {
+      await api('/prikaz.json', {
+        method: 'PUT',
+        body: JSON.stringify(Object.assign(command, { cas: { '.sv': 'timestamp' } })),
+      });
+    } catch (e) {
+      pending = null;
+      removing = null;
+      showError('Nejde odeslat: ' + e.message);
+      render();
+    }
+  }
+
+  function play(id) {
+    pending = id;
+    send({ video: id });
+  }
+
+  function remove(id) {
+    if (!confirm('Smazat video ze seznamu na tabletu?')) return;
+    if (pending === id) pending = null;
+    removing = id;
+    send({ video: id, akce: 'smazat' });
+  }
+
+  // Firebase gives arrays back as objects with "0", "1"... keys when it does not consider them dense.
+  function toArray(v) {
+    if (Array.isArray(v)) return v;
+    return v && typeof v === 'object' ? Object.keys(v).sort((a, b) => a - b).map((k) => v[k]) : [];
+  }
+
+  async function loadPanes() {
+    try {
+      const v = await api('/okna.json');
+      const skla = toArray(v && v.skla).map(toArray).filter((q) => q.length === 8 && q.every((n) => typeof n === 'number'));
+      panes = {
+        skla: skla.length === 2 ? skla : DEFAULT_PANES.map((q) => q.slice()),
+        maska: !!(v && v.maska),
+        obrys: !!(v && v.obrys),
+      };
+    } catch (e) {
+      showError('Nejde načíst okna: ' + e.message);
+      return;
+    }
+    $('maska').checked = panes.maska;
+    $('obrys').checked = panes.obrys;
+    buildPanes();
+  }
+
+  function buildPanes() {
+    const svg = $('shapes');
+    svg.replaceChildren();
+    $('frame').querySelectorAll('.handle').forEach((h) => h.remove());
+    panes.skla.forEach((q, i) => {
+      const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      poly.setAttribute('fill', PANE_COLORS[i]);
+      poly.setAttribute('stroke', PANE_COLORS[i]);
+      svg.append(poly);
+      for (let c = 0; c < 4; c++) {
+        const h = document.createElement('div');
+        h.className = 'handle' + (c === 0 ? ' first' : '');
+        h.style.color = PANE_COLORS[i];
+        h.addEventListener('pointerdown', (e) => dragCorner(e, i, c));
+        $('frame').append(h);
+      }
+    });
+    drawPanes();
+  }
+
+  function drawPanes() {
+    const polys = $('shapes').children;
+    const handles = $('frame').querySelectorAll('.handle');
+    panes.skla.forEach((q, i) => {
+      polys[i].setAttribute('points', [0, 2, 4, 6].map((j) => q[j] + ',' + q[j + 1]).join(' '));
+      for (let c = 0; c < 4; c++) {
+        handles[i * 4 + c].style.left = q[c * 2] * 100 + '%';
+        handles[i * 4 + c].style.top = q[c * 2 + 1] * 100 + '%';
+      }
+    });
+  }
+
+  function dragCorner(e, i, c) {
+    e.preventDefault();
+    const h = e.currentTarget;
+    h.setPointerCapture(e.pointerId);
+    const clamp = (v) => Math.round(Math.min(1, Math.max(0, v)) * 1000) / 1000;
+    const move = (ev) => {
+      const r = $('frame').getBoundingClientRect();
+      panes.skla[i][c * 2] = clamp((ev.clientX - r.left) / r.width);
+      panes.skla[i][c * 2 + 1] = clamp((ev.clientY - r.top) / r.height);
+      drawPanes();
+      sendPanes();
+    };
+    const end = () => {
+      h.removeEventListener('pointermove', move);
+      h.removeEventListener('pointerup', end);
+      h.removeEventListener('pointercancel', end);
+    };
+    h.addEventListener('pointermove', move);
+    h.addEventListener('pointerup', end);
+    h.addEventListener('pointercancel', end);
+  }
+
+  // One write in flight; whatever changed meanwhile goes in the next one, so dragging keeps pace with the network.
+  async function sendPanes() {
+    panesDirty = true;
+    if (panesSending) return;
+    panesSending = true;
+    while (panesDirty) {
+      panesDirty = false;
+      try {
+        await api('/okna.json', { method: 'PUT', body: JSON.stringify(panes) });
+      } catch (e) {
+        showError('Nejde uložit okna: ' + e.message);
+        break;
+      }
+    }
+    panesSending = false;
+  }
+
+  ['maska', 'obrys'].forEach((name) => $(name).addEventListener('change', () => {
+    if (!panes) return;
+    panes[name] = $(name).checked;
+    sendPanes();
+  }));
+
+  $('addForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = parseId($('addInput').value);
+    if (!id) {
+      showError('Tohle není odkaz na YouTube video.');
+      return;
+    }
+    $('addInput').value = '';
+    play(id);
+  });
+
+  $('keyForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = $('keyInput').value.trim();
+    const fromLink = value.includes('#k=') ? new URLSearchParams(value.split('#')[1]).get('k') : value;
+    if (!fromLink) return;
+    location.hash = 'k=' + encodeURIComponent(fromLink);
+    location.reload();
+  });
+
+  // Phones drop connections of pages in the background; reopen as soon as the page is looked at again.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden || !key) return;
+    if (!stream || stream.readyState === EventSource.CLOSED) openStream();
+    loadLog();
+  });
+
+  key = loadKey();
+  if (key) {
+    $('app').hidden = false;
+    openStream();
+    loadLog();
+    loadPanes();
+    setInterval(renderStatus, 5000);
+  } else {
+    $('setup').hidden = false;
+  }
+</script>
+</body>
+</html>
