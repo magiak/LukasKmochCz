@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b0b10">
+<meta name="color-scheme" content="dark">
+<title>Duch v okně</title>
+<style>
+  :root {
+    --bg: #0b0b10;
+    --card: #16161f;
+    --line: #2c2c3c;
+    --text: #ececf3;
+    --muted: #9a9ab2;
+    --ok: #3ddc84;
+    --bad: #ff5252;
+    --c: #ff7a1a;
+    --c1: rgba(255, 122, 26, .1);
+    --c2: rgba(255, 122, 26, .22);
+    --c4: rgba(255, 122, 26, .45);
+  }
+  * { box-sizing: border-box; }
+  html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); overscroll-behavior: none; }
+  body {
+    font: 18px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+  [hidden] { display: none !important; }
+
+  .volba { max-width: 520px; margin: 0 auto; padding: max(14px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom)); }
+  .hlava { display: flex; align-items: center; gap: 14px; }
+  .duch { flex: none; width: 54px; height: 61px; fill: #e6e3f2; filter: drop-shadow(0 0 12px var(--c4)); animation: vznaset 3.2s ease-in-out infinite; }
+  @keyframes vznaset { 50% { transform: translateY(-6px); } }
+  h1 { font-size: 30px; line-height: 1.1; margin: 0 0 4px; }
+  .uvod { margin: 0; color: var(--muted); font-size: 17px; }
+  h2 { font-size: 17px; font-weight: 600; color: var(--muted); margin: 20px 0 10px; }
+  h2 span { color: var(--c); font-weight: 800; }
+
+  .barvy { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .vzorek {
+    position: relative; aspect-ratio: 1; width: 100%; padding: 0; border: 0; border-radius: 50%;
+    background: var(--vz); box-shadow: inset 0 -6px 12px rgba(0, 0, 0, .25);
+  }
+  .vzorek[aria-pressed="true"] { outline: 4px solid var(--text); outline-offset: 4px; }
+  .vzorek[aria-pressed="true"]::after {
+    content: ""; position: absolute; left: 50%; top: 46%; width: 26%; height: 13%;
+    border: solid #111; border-width: 0 0 5px 5px; transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .okna { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .okno {
+    display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 124px; padding: 12px 8px;
+    background: var(--card); border: 3px solid var(--line); border-radius: 18px; font-size: 19px; font-weight: 700;
+  }
+  .okno[aria-pressed="true"] { border-color: var(--c); background: var(--c1); box-shadow: 0 0 22px -6px var(--c); }
+  .okno svg { width: 92px; height: 69px; }
+  .dum { fill: none; stroke: #74748e; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+  .sklo { fill: #1f1f2c; stroke: #74748e; stroke-width: 2; }
+  .sklo.on { fill: var(--c); stroke: var(--c); filter: drop-shadow(0 0 4px var(--c)); }
+  .okno[aria-pressed="false"] .sklo.on { fill: #55556b; stroke: #8a8aa2; filter: none; }
+  .pricka { stroke: var(--bg); stroke-width: 1.6; opacity: .55; }
+
+  .hrat {
+    display: block; width: 100%; min-height: 76px; margin-top: 24px; border: 3px solid var(--c); border-radius: 20px;
+    background: var(--c2); color: var(--c); font-size: 30px; font-weight: 900; letter-spacing: .03em;
+    text-shadow: 0 0 14px var(--c4); box-shadow: 0 0 28px -8px var(--c);
+  }
+  .hrat:active, .okno:active, .cip:active { transform: scale(.97); }
+  .stav { display: flex; justify-content: center; align-items: baseline; gap: 8px; min-height: 1.4em; margin: 12px 0 0; text-align: center; font-size: 17px; color: var(--muted); }
+  .stav.s-ok::before, .stav.s-bad::before, .stav.s-spi::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; }
+  .stav.s-ok::before { background: var(--ok); }
+  .stav.s-bad::before { background: var(--bad); }
+  .stav.s-spi::before { background: var(--muted); }
+
+  .hry { margin-top: 18px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 4px 14px; }
+  .hry summary { padding: 10px 0; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .hry ul { margin: 0 0 12px; padding-left: 20px; font-size: 16px; }
+  .hry li { margin: 6px 0; }
+  .hry b { color: var(--c); }
+
+  body.hraje { overflow: hidden; }
+  .hra {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    padding: max(8px, env(safe-area-inset-top)) 0 max(10px, env(safe-area-inset-bottom));
+  }
+  .lista { display: flex; justify-content: space-between; gap: 10px; padding: 0 10px; }
+  .cip {
+    display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 6px 16px 6px 10px;
+    background: var(--card); border: 2px solid var(--line); border-radius: 26px; font-size: 17px; font-weight: 700;
+  }
+  .tecka { width: 30px; height: 30px; border-radius: 50%; background: var(--c); }
+  .cip svg { width: 40px; height: 30px; }
+  .hra .stav { margin: 6px 12px 8px; }
+
+  .plocha {
+    position: relative; flex: 1; margin: 0 10px; overflow: hidden; border: 3px solid var(--c); border-radius: 26px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    background: radial-gradient(circle at 50% 45%, var(--c2), var(--c1) 55%, transparent 80%), var(--bg);
+    touch-action: none; outline: none; cursor: pointer;
+  }
+  .tuk { font-size: clamp(72px, 24vw, 132px); font-weight: 900; line-height: 1; color: var(--c); text-shadow: 0 0 26px var(--c4); pointer-events: none; }
+  .pocet { font-size: 20px; color: var(--muted); pointer-events: none; }
+  .pocet b { font-size: 46px; color: var(--text); font-variant-numeric: tabular-nums; }
+  .sleduj { position: absolute; left: 0; right: 0; bottom: 18px; margin: 0; text-align: center; font-size: 22px; font-weight: 800; pointer-events: none; }
+  .sleduj small { display: block; font-size: 15px; font-weight: 400; color: var(--muted); }
+  .vypadek {
+    position: absolute; top: 12px; left: 12px; right: 12px; padding: 10px 12px; border-radius: 14px; text-align: center;
+    background: rgba(255, 82, 82, .14); border: 1px solid rgba(255, 82, 82, .5); font-size: 16px; pointer-events: none;
+  }
+  .spi { display: none; flex-direction: column; align-items: center; gap: 6px; padding: 0 24px; text-align: center; pointer-events: none; }
+  .spi svg { width: 84px; height: 95px; fill: #8b8aa0; animation: vznaset 4s ease-in-out infinite; }
+  .spi b { font-size: 30px; }
+  .spi span { color: var(--muted); font-size: 18px; }
+  .zzz { position: absolute; font-weight: 800; color: var(--muted); }
+
+  body[data-rezim="sleep"] .plocha { border-color: var(--line); background: var(--bg); }
+  body[data-rezim="sleep"] .tuk, body[data-rezim="sleep"] .pocet, body[data-rezim="sleep"] .sleduj { display: none; }
+  body[data-rezim="sleep"] .spi { display: flex; }
+  body:not([data-rezim="offline"]):not([data-rezim="server"]) .vypadek { display: none; }
+
+  .vlna { position: absolute; width: 130px; height: 130px; margin: -65px 0 0 -65px; border: 5px solid var(--c); border-radius: 50%; pointer-events: none; }
+  .vlna.tlumena { border-color: var(--line); }
+  .spr { position: absolute; left: 0; top: 0; fill: var(--c); pointer-events: none; filter: drop-shadow(0 0 6px var(--c4)); }
+  .spr.netopyr { width: 64px; height: 32px; }
+  .spr.netopyr use { transform-box: fill-box; transform-origin: center; animation: mavat .11s ease-in-out infinite alternate; }
+  .spr.kapka { width: 24px; height: 32px; }
+  .spr.skvrna { width: 44px; height: 44px; }
+  @keyframes mavat { to { transform: scaleY(.4); } }
+
+  .arch { position: fixed; inset: 0; z-index: 5; display: flex; align-items: flex-end; background: rgba(0, 0, 0, .6); }
+  .arch-in {
+    width: 100%; max-width: 520px; margin: 0 auto; padding: 16px 16px max(20px, env(safe-area-inset-bottom));
+    background: var(--card); border: 1px solid var(--line); border-radius: 22px 22px 0 0;
+  }
+  .arch h2 { margin-top: 4px; }
+  .zavrit { display: block; width: 100%; min-height: 56px; margin-top: 18px; border: 2px solid var(--line); border-radius: 16px; background: var(--bg); font-weight: 700; }
+
+  .toast {
+    position: fixed; left: 50%; top: max(76px, calc(env(safe-area-inset-top) + 68px)); z-index: 6; transform: translateX(-50%);
+    width: max-content; max-width: calc(100% - 32px); padding: 12px 18px; border-radius: 16px; text-align: center;
+    background: #22222f; border: 1px solid var(--c); font-weight: 700; box-shadow: 0 8px 30px rgba(0, 0, 0, .6); pointer-events: none;
+  }
+  noscript p { padding: 24px 16px; }
+</style>
+</head>
+<body data-rezim="connecting">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-duch" viewBox="0 0 64 72">
+    <path d="M32 3C16.5 3 7 14.5 7 30v38l8.3-6 8.4 6 8.3-6 8.3 6 8.4-6 8.3 6V30C57 14.5 47.5 3 32 3z"/>
+    <ellipse cx="23" cy="30" rx="4.5" ry="6" fill="#0b0b10"/><ellipse cx="41" cy="30" rx="4.5" ry="6" fill="#0b0b10"/>
+    <ellipse cx="32" cy="46" rx="5" ry="6.5" fill="#0b0b10"/>
+  </symbol>
+  <symbol id="i-duch-spi" viewBox="0 0 64 72">
+    <path d="M32 3C16.5 3 7 14.5 7 30v38l8.3-6 8.4 6 8.3-6 8.3 6 8.4-6 8.3 6V30C57 14.5 47.5 3 32 3z"/>
+    <path d="M17 31q6 5 12 0M35 31q6 5 12 0" fill="none" stroke="#0b0b10" stroke-width="3.2" stroke-linecap="round"/>
+    <ellipse cx="32" cy="46" rx="3.5" ry="2.5" fill="#0b0b10"/>
+  </symbol>
+  <symbol id="i-netopyr" viewBox="0 0 100 50">
+    <path d="M50 18l-4-8-2 7C38 8 24 6 10 10c6 4 8 10 6 16-6-2-12 0-16 4 8 0 14 4 16 10 6-6 14-8 22-6 2 4 6 8 12 10 6-2 10-6 12-10 8-2 16 0 22 6 2-6 8-10 16-10-4-4-10-6-16-4-2-6 0-12 6-16-14-4-28-2-34 7l-2-7z"/>
+  </symbol>
+  <symbol id="i-kapka" viewBox="0 0 24 32"><path d="M12 1S2 13 2 21a10 10 0 0 0 20 0C22 13 12 1 12 1z"/></symbol>
+  <symbol id="i-skvrna" viewBox="0 0 40 40">
+    <circle cx="20" cy="21" r="10"/><circle cx="8" cy="10" r="3.5"/><circle cx="33" cy="9" r="3"/>
+    <circle cx="35" cy="29" r="4"/><circle cx="6" cy="31" r="3"/><circle cx="21" cy="4" r="2.5"/><circle cx="24" cy="37" r="2"/>
+  </symbol>
+</svg>
+
+<noscript><p>Tahle hra potřebuje zapnutý JavaScript.</p></noscript>
+
+<main id="volba" class="volba">
+  <header class="hlava">
+    <svg class="duch" aria-hidden="true"><use href="#i-duch"/></svg>
+    <div>
+      <h1>Duch v okně</h1>
+      <p class="uvod">Vyber barvu a okno, ťukej a sleduj, co se v okně stane.</p>
+    </div>
+  </header>
+
+  <h2>Tvoje barva: <span id="nazevBarvy"></span></h2>
+  <div id="barvy" class="barvy" role="group" aria-label="Barva"></div>
+
+  <h2>Tvoje okno</h2>
+  <div class="okna" role="group" aria-label="Okno">
+    <button class="okno" data-okno="0" aria-pressed="false"><span class="obr"></span>Levé okno</button>
+    <button class="okno" data-okno="1" aria-pressed="false"><span class="obr"></span>Pravé okno</button>
+  </div>
+
+  <button id="hrat" class="hrat">Hrát</button>
+  <p id="stavVolba" class="stav" role="status" aria-live="polite"></p>
+
+  <details class="hry">
+    <summary>Co se v oknech může dít</summary>
+    <ul>
+      <li><b>Netopýři:</b> každé ťuknutí pošle do okna netopýra v tvé barvě.</li>
+      <li><b>Obarvi okno:</b> ťukáním stříkáš do svého okna svou barvu. Když barva okno ovládne, něco se stane.</li>
+      <li><b>Přetahovaná o ducha:</b> tvoje okno je tvůj tým. Odstrč ducha do druhého okna.</li>
+      <li><b>Hasiči:</b> okna hoří a tvoje ťuknutí stříkají vodu.</li>
+      <li>A pozor, duch se může kdykoli ukázat sám.</li>
+    </ul>
+  </details>
+</main>
+
+<section id="hra" class="hra" hidden>
+  <div class="lista">
+    <button id="zmenBarvu" class="cip" aria-label="Změnit barvu"><span class="tecka"></span>Barva</button>
+    <button id="zmenOkno" class="cip" aria-label="Přepnout okno"><span id="oknoObr"></span><span id="oknoCip"></span></button>
+  </div>
+  <p id="stavHra" class="stav" role="status" aria-live="polite"></p>
+  <div id="plocha" class="plocha" role="button" tabindex="0" aria-label="Ťukni">
+    <div class="vypadek">Nejde internet. Ťuknutí si pamatuju a pošlu je, až to půjde.</div>
+    <div id="tuk" class="tuk">ŤUK!</div>
+    <div class="pocet"><b id="pocet">0</b> <span id="jednotka">ťuků</span></div>
+    <div class="spi">
+      <svg aria-hidden="true"><use href="#i-duch-spi"/></svg>
+      <b>Duch spí</b>
+      <span>Hra je teď vypnutá. Zkus to za chvíli.</span>
+    </div>
+    <p class="sleduj"><span id="sledujText"></span><small>Okno zareaguje za chvilku.</small></p>
+  </div>
+</section>
+
+<div id="arch" class="arch" hidden>
+  <div class="arch-in" role="dialog" aria-label="Vyber barvu">
+    <h2>Vyber barvu</h2>
+    <div id="barvy2" class="barvy" role="group" aria-label="Barva"></div>
+    <button id="zavrit" class="zavrit">Zavřít</button>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+  'use strict';
+  const DB = 'https://lukaskmoch-default-rtdb.firebaseio.com';
+  const COLORS = ['#ff7a1a', '#3ddc84', '#b05cff', '#ff3355', '#ffe14d', '#33d6ff', '#ff66c4', '#f2f2f2'];
+  const NAMES = ['oranžová', 'zelená', 'fialová', 'červená', 'žlutá', 'modrá', 'růžová', 'bílá'];
+  const SIDES = ['levé', 'pravé'];
+  // Mirrors the database rules: tuky may grow by at most 30 per write.
+  const MAX_STEP = 30;
+  const SEND_GAP = 300;
+  // The server wants 200 ms between writes by its own clock; counting from our last answer keeps that true at any latency.
+  const ANSWER_GAP = 250;
+  const SLEEP_RETRY = 15000;
+  const SESSION_CHECK = 60000;
+  const TIMEOUT = 10000;
+  const K_ID = 'duch-id';
+  const K_PREFS = 'duch-volba';
+  const K_PLAY = 'duch-hra';
+  const DEBUG = (/(?:^#|&)stav=([a-z]+)/.exec(location.hash) || [])[1] || null;
+
+  const $ = (id) => document.getElementById(id);
+  const isCount = (v) => Number.isInteger(v) && v >= 0;
+  const isSession = (v) => typeof v === 'string' && /^[a-z0-9]{6,24}$/.test(v);
+
+  const memory = {};
+  function load(key) {
+    try {
+      const v = localStorage.getItem(key);
+      if (v !== null) return JSON.parse(v);
+    } catch (e) { /* private mode or blocked storage */ }
+    return key in memory ? memory[key] : null;
+  }
+  function save(key, value) {
+    memory[key] = value;
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* memory copy is enough */ }
+  }
+
+  function newId() {
+    const abc = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const bytes = new Uint8Array(16);
+    try { crypto.getRandomValues(bytes); } catch (e) { for (let i = 0; i < bytes.length; i++) bytes[i] = Math.random() * 256; }
+    let s = '';
+    for (const b of bytes) s += abc[b % abc.length];
+    return s;
+  }
+
+  let ID = load(K_ID);
+  if (typeof ID !== 'string' || !/^[a-z0-9]{8,24}$/.test(ID)) {
+    ID = newId();
+    save(K_ID, ID);
+  }
+  const prefs = load(K_PREFS) || {};
+
+  const st = {
+    color: Number.isInteger(prefs.barva) && prefs.barva >= 0 && prefs.barva < COLORS.length ? prefs.barva : Math.floor(Math.random() * COLORS.length),
+    win: Math.random() < 0.5 ? 0 : 1,
+    winTouched: false,
+    resumedWin: false,
+    session: null,
+    taps: 0,
+    acked: 0,
+    sentColor: -1,
+    sentWin: -1,
+    mode: 'connecting',
+    ready: false,
+    playing: false,
+    busy: false,
+    sentAt: -1e9,
+    answeredAt: -1e9,
+    sessionCheckedAt: -1e9,
+    wakeAt: 0,
+    backoff: 0,
+    recordChecked: '',
+    hiddenAt: 0,
+    timer: 0,
+  };
+
+  // ---------- network ----------
+
+  class Denied extends Error {}
+  class ServerError extends Error {}
+
+  async function req(path, options) {
+    const ctl = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = ctl && setTimeout(() => ctl.abort(), TIMEOUT);
+    try {
+      const r = await fetch(DB + path + '.json', Object.assign({ signal: ctl ? ctl.signal : undefined }, options));
+      if (r.status === 401 || r.status === 403) throw new Denied();
+      if (!r.ok) throw new ServerError('HTTP ' + r.status);
+      return await r.json();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  const playerPath = (session) => '/strasidlo-hra/hry/' + session + '/hraci/' + ID;
+
+  function persist() {
+    save(K_PLAY, { relace: st.session, tuky: st.taps, potvrzeno: st.acked, okno: st.win });
+  }
+
+  function adoptSession(cur) {
+    const prev = st.session;
+    const saved = load(K_PLAY);
+    const same = !!saved && saved.relace === cur;
+    st.session = cur;
+    st.acked = same && isCount(saved.potvrzeno) ? saved.potvrzeno : 0;
+    st.taps = same && isCount(saved.tuky) ? Math.max(saved.tuky, st.acked) : 0;
+    st.sentColor = -1;
+    st.sentWin = -1;
+    st.recordChecked = '';
+    st.resumedWin = same && (saved.okno === 0 || saved.okno === 1);
+    if (st.resumedWin && !st.winTouched) st.win = saved.okno;
+    persist();
+    if (prev && prev !== cur) toast('Začala nová hra, ťuknutí se počítají od nuly.');
+    renderCount();
+    return same;
+  }
+
+  // The server copy wins: after a reload, a lost answer or a second tab, writing below it would be refused forever.
+  function syncRecord(rec) {
+    const server = rec && isCount(rec.tuky) ? rec.tuky : 0;
+    if (server === st.acked) return false;
+    st.acked = server;
+    st.taps = Math.max(st.taps, server);
+    persist();
+    renderCount();
+    return true;
+  }
+
+  function suggestWin(players) {
+    const list = Object.keys(players || {}).filter((k) => k !== ID).map((k) => players[k])
+      .filter((p) => p && typeof p.cas === 'number' && (p.okno === 0 || p.okno === 1));
+    if (!list.length) return st.win;
+    // Phone clocks are not trusted, so "active" is relative to the newest write in the data.
+    const newest = list.reduce((m, p) => Math.max(m, p.cas), 0);
+    const n = [0, 0];
+    for (const p of list) if (p.cas >= newest - 60000) n[p.okno]++;
+    return n[0] === n[1] ? st.win : (n[0] < n[1] ? 0 : 1);
+  }
+
+  function sleep() {
+    st.mode = 'sleep';
+    st.wakeAt = performance.now() + SLEEP_RETRY;
+  }
+
+  function offline(kind) {
+    st.backoff = st.backoff ? Math.min(st.backoff * 2, 15000) : 1000;
+    st.mode = kind;
+    st.wakeAt = performance.now() + st.backoff;
+  }
+
+  async function checkSession() {
+    const cur = await req('/strasidlo-hra/aktualni');
+    st.sessionCheckedAt = performance.now();
+    if (!isSession(cur)) {
+      sleep();
+      return false;
+    }
+    if (cur !== st.session) adoptSession(cur);
+    return true;
+  }
+
+  async function startup() {
+    if (!(await checkSession())) return;
+    let players = null;
+    try {
+      players = await req('/strasidlo-hra/hry/' + st.session + '/hraci');
+    } catch (e) {
+      if (!(e instanceof Denied)) throw e;
+    }
+    if (!players) return;
+    const me = players[ID];
+    syncRecord(me);
+    if (!st.winTouched && !st.resumedWin) st.win = me && (me.okno === 0 || me.okno === 1) ? me.okno : suggestWin(players);
+  }
+
+  async function denied(session) {
+    if (!(await checkSession()) || st.session !== session) return;
+    const key = session + ':' + st.acked;
+    if (st.recordChecked !== key) {
+      st.recordChecked = key;
+      if (syncRecord(await req(playerPath(session)))) return;
+    }
+    sleep();
+  }
+
+  async function put() {
+    const session = st.session;
+    const tuky = Math.min(st.taps, st.acked + MAX_STEP);
+    const body = { barva: st.color, okno: st.win, tuky: tuky, cas: { '.sv': 'timestamp' } };
+    st.sentAt = performance.now();
+    try {
+      await req(playerPath(session), { method: 'PUT', body: JSON.stringify(body) });
+    } catch (e) {
+      if (!(e instanceof Denied)) throw e;
+      st.answeredAt = performance.now();
+      await denied(session);
+      return;
+    }
+    st.answeredAt = performance.now();
+    st.acked = Math.max(st.acked, tuky);
+    st.sentColor = body.barva;
+    st.sentWin = body.okno;
+    st.mode = 'play';
+    persist();
+  }
+
+  async function run(op) {
+    st.busy = true;
+    try {
+      await op();
+      st.backoff = 0;
+    } catch (e) {
+      if (e instanceof Denied) sleep();
+      else offline(e instanceof ServerError ? 'server' : 'offline');
+    }
+    st.busy = false;
+    st.ready = true;
+    render();
+    work();
+  }
+
+  function schedule(ms) {
+    clearTimeout(st.timer);
+    st.timer = setTimeout(work, Math.max(0, ms));
+  }
+
+  // The single driver: at most one request at a time, paced by the gaps above, idle while the page is hidden.
+  function work() {
+    clearTimeout(st.timer);
+    if (DEBUG || st.busy || !st.playing || document.hidden) return;
+    const t = performance.now();
+    if (st.mode !== 'play' && st.mode !== 'connecting' && t < st.wakeAt) return schedule(st.wakeAt - t);
+    if (!st.session || t - st.sessionCheckedAt >= SESSION_CHECK) return void run(checkSession);
+    const pending = st.mode !== 'play' || st.taps > st.acked || st.color !== st.sentColor || st.win !== st.sentWin;
+    if (!pending) return schedule(st.sessionCheckedAt + SESSION_CHECK - t);
+    const gate = Math.max(st.sentAt + SEND_GAP, st.answeredAt + ANSWER_GAP);
+    if (t < gate) return schedule(gate - t);
+    run(put);
+  }
+
+  // ---------- view ----------
+
+  function rgba(hex, a) {
+    const n = parseInt(hex.slice(1), 16);
+    return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+
+  function houseSvg(side) {
+    const pane = (x, i) => '<rect class="sklo' + (i === side ? ' on' : '') + '" x="' + x + '" y="30" width="17" height="18" rx="1.5"/>'
+      + '<path class="pricka" d="M' + (x + 8.5) + ' 30v18M' + x + ' 39h17"/>';
+    return '<svg viewBox="0 0 80 60" aria-hidden="true"><path class="dum" d="M5 26 40 5l35 21M12 22v35h56V22"/>'
+      + pane(18, 0) + pane(45, 1) + '</svg>';
+  }
+
+  function buildSwatches(box, onPick) {
+    COLORS.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.className = 'vzorek';
+      b.style.setProperty('--vz', c);
+      b.setAttribute('aria-label', NAMES[i]);
+      b.dataset.barva = i;
+      b.addEventListener('click', () => onPick(i));
+      box.append(b);
+    });
+  }
+
+  function statusText() {
+    switch (st.mode) {
+      case 'play': return 'Hraješ za ' + SIDES[st.win] + ' okno';
+      case 'sleep': return 'Hra je teď vypnutá, duch spí. Zkus to za chvíli.';
+      case 'offline': return 'Nejde internet. Zkouším to znovu…';
+      case 'server': return 'Server teď nestíhá. Zkouším to znovu…';
+      default: return 'Spojuji…';
+    }
+  }
+
+  function statusClass() {
+    return { play: 's-ok', sleep: 's-spi', offline: 's-bad', server: 's-bad' }[st.mode] || '';
+  }
+
+  function unit(n) {
+    if (n === 1) return 'ťuk';
+    return n >= 2 && n <= 4 ? 'ťuky' : 'ťuků';
+  }
+
+  function renderCount() {
+    $('pocet').textContent = st.taps;
+    $('jednotka').textContent = unit(st.taps);
+  }
+
+  function render() {
+    const c = COLORS[st.color];
+    const s = document.documentElement.style;
+    s.setProperty('--c', c);
+    s.setProperty('--c1', rgba(c, 0.1));
+    s.setProperty('--c2', rgba(c, 0.22));
+    s.setProperty('--c4', rgba(c, 0.45));
+    document.body.dataset.rezim = st.mode;
+    document.body.classList.toggle('hraje', st.playing);
+    $('volba').hidden = st.playing;
+    $('hra').hidden = !st.playing;
+    $('nazevBarvy').textContent = NAMES[st.color];
+    document.querySelectorAll('.vzorek').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.barva === st.color)));
+    document.querySelectorAll('.okno').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.okno === st.win)));
+    const chip = $('oknoObr');
+    if (chip.dataset.side !== String(st.win)) {
+      chip.dataset.side = st.win;
+      chip.innerHTML = houseSvg(st.win);
+    }
+    $('oknoCip').textContent = st.win ? 'Pravé okno' : 'Levé okno';
+    $('sledujText').textContent = 'Sleduj ' + SIDES[st.win] + ' okno!';
+    $('hrat').textContent = st.taps > 0 && st.session ? 'Hrát dál' : 'Hrát';
+
+    const pick = !st.ready ? 'Spojuji…' : ({ sleep: statusText(), offline: 'Nejde internet.', server: 'Server teď nestíhá.' }[st.mode] || '');
+    $('stavVolba').textContent = pick;
+    $('stavVolba').className = 'stav ' + (pick ? statusClass() : '');
+    $('stavHra').textContent = statusText();
+    $('stavHra').className = 'stav ' + statusClass();
+    renderCount();
+  }
+
+  let toastTimer = 0;
+  function toast(text) {
+    const t = $('toast');
+    t.textContent = text;
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+  }
+
+  // ---------- tapping ----------
+
+  const area = $('plocha');
+  const KINDS = ['netopyr', 'netopyr', 'kapka', 'skvrna'];
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  let flying = 0;
+
+  function ripple(x, y, muted) {
+    const r = document.createElement('div');
+    r.className = 'vlna' + (muted ? ' tlumena' : '');
+    r.style.left = x + 'px';
+    r.style.top = y + 'px';
+    area.append(r);
+    const a = r.animate([{ transform: 'scale(.15)', opacity: 0.9 }, { transform: 'scale(1.3)', opacity: 0 }], { duration: 480, easing: 'ease-out' });
+    a.onfinish = () => r.remove();
+  }
+
+  function sprite(x, y) {
+    // Many fingers at once would otherwise pile up hundreds of animations on a cheap phone.
+    if (flying > 24) return;
+    const kind = KINDS[Math.floor(Math.random() * KINDS.length)];
+    const el = document.createElementNS(SVG_NS, 'svg');
+    el.setAttribute('class', 'spr ' + kind);
+    const use = document.createElementNS(SVG_NS, 'use');
+    use.setAttribute('href', '#i-' + kind);
+    el.append(use);
+    area.append(el);
+    flying++;
+    const dx = (Math.random() - 0.5) * 180;
+    const rot = (Math.random() - 0.5) * (kind === 'netopyr' ? 30 : 120);
+    const from = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%)';
+    const to = 'translate(' + (x + dx) + 'px,' + (-60) + 'px) translate(-50%,-50%)';
+    const a = el.animate([
+      { transform: from + ' scale(.5) rotate(0deg)', opacity: 1 },
+      { transform: to + ' scale(1.25) rotate(' + rot + 'deg)', opacity: 0.2 },
+    ], { duration: 650 + y * 0.6, easing: 'cubic-bezier(.25,.6,.45,1)' });
+    a.onfinish = () => { el.remove(); flying--; };
+  }
+
+  function bump() {
+    $('tuk').animate([{ transform: 'scale(1.14)' }, { transform: 'scale(1)' }], { duration: 160, easing: 'ease-out' });
+  }
+
+  function tapAt(clientX, clientY) {
+    const r = area.getBoundingClientRect();
+    const x = clientX - r.left;
+    const y = clientY - r.top;
+    if (st.mode === 'sleep') {
+      ripple(x, y, true);
+      // A tap on the sleeping ghost may check sooner than the 15 s timer, but not more than once per 5 s.
+      st.wakeAt = Math.min(st.wakeAt, Math.max(st.sentAt, st.sessionCheckedAt) + 5000);
+      work();
+      return;
+    }
+    st.taps++;
+    persist();
+    try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) { /* not supported */ }
+    ripple(x, y, false);
+    sprite(x, y);
+    bump();
+    renderCount();
+    work();
+  }
+
+  if (window.PointerEvent) {
+    area.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      e.preventDefault();
+      tapAt(e.clientX, e.clientY);
+    });
+  } else {
+    area.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      for (const t of e.changedTouches) tapAt(t.clientX, t.clientY);
+    }, { passive: false });
+    area.addEventListener('mousedown', (e) => { if (e.button === 0) tapAt(e.clientX, e.clientY); });
+  }
+  area.addEventListener('keydown', (e) => {
+    if (e.repeat || (e.key !== ' ' && e.key !== 'Enter')) return;
+    e.preventDefault();
+    const r = area.getBoundingClientRect();
+    tapAt(r.left + r.width / 2, r.top + r.height / 2);
+  });
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+  document.addEventListener('dblclick', (e) => e.preventDefault());
+
+  // ---------- controls ----------
+
+  function savePrefs() {
+    save(K_PREFS, { barva: st.color });
+    persist();
+  }
+
+  function setColor(i) {
+    st.color = i;
+    savePrefs();
+    render();
+    work();
+  }
+
+  function setWin(i) {
+    st.win = i;
+    savePrefs();
+    render();
+    work();
+  }
+
+  buildSwatches($('barvy'), setColor);
+  buildSwatches($('barvy2'), (i) => { setColor(i); $('arch').hidden = true; });
+  document.querySelectorAll('.okno').forEach((b) => {
+    b.querySelector('.obr').innerHTML = houseSvg(+b.dataset.okno);
+  });
+  document.querySelectorAll('.okno').forEach((b) => b.addEventListener('click', () => {
+    st.winTouched = true;
+    setWin(+b.dataset.okno);
+  }));
+  $('zmenBarvu').addEventListener('click', () => { $('arch').hidden = false; });
+  $('zavrit').addEventListener('click', () => { $('arch').hidden = true; });
+  $('arch').addEventListener('click', (e) => { if (e.target === $('arch')) $('arch').hidden = true; });
+  $('zmenOkno').addEventListener('click', () => {
+    st.winTouched = true;
+    setWin(1 - st.win);
+    toast('Teď hraješ za ' + SIDES[st.win] + ' okno');
+  });
+
+  let wakeLock = null;
+  async function keepAwake() {
+    if (!st.playing || document.hidden || wakeLock || !navigator.wakeLock) return;
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    } catch (e) { /* the screen may dim, nothing else breaks */ }
+  }
+
+  $('hrat').addEventListener('click', () => {
+    st.playing = true;
+    st.wakeAt = 0;
+    savePrefs();
+    render();
+    keepAwake();
+    work();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      st.hiddenAt = Date.now();
+      persist();
+      return;
+    }
+    if (Date.now() - st.hiddenAt > 30000) st.sessionCheckedAt = -1e9;
+    if (st.mode !== 'play') st.wakeAt = 0;
+    keepAwake();
+    work();
+  });
+
+  window.addEventListener('online', () => {
+    if (st.mode !== 'play') st.wakeAt = 0;
+    work();
+  });
+
+  if (DEBUG) {
+    st.ready = DEBUG !== 'spojuji';
+    const modes = { hraje: 'play', barva: 'play', spi: 'sleep', offline: 'offline', vypnuto: 'sleep' };
+    if (modes[DEBUG]) st.mode = modes[DEBUG];
+    if (['hraje', 'barva', 'spi', 'offline'].includes(DEBUG)) {
+      st.playing = true;
+      st.taps = 42;
+    }
+    render();
+    if (DEBUG === 'barva') $('arch').hidden = false;
+  } else {
+    render();
+    run(startup);
+  }
+</script>
+</body>
+</html>

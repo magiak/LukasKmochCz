@@ -77,6 +77,41 @@
   .check { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
   .check input { flex: none; width: 22px; height: 22px; padding: 0; }
   #log { font: 12px/1.45 ui-monospace, Consolas, monospace; white-space: pre-wrap; word-break: break-word; max-height: 50vh; overflow: auto; }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+  .tab {
+    padding: 12px; border: 2px solid var(--line); border-radius: 12px; background: var(--card); color: var(--text);
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .tab.on { border-color: var(--accent); }
+  .game {
+    padding: 12px; border: 2px solid var(--line); border-radius: 12px; background: var(--card); color: var(--text);
+    font: inherit; text-align: left; cursor: pointer;
+  }
+  .game b { display: block; font-size: 17px; }
+  .game small { color: var(--muted); }
+  .game.on { border-color: var(--accent); }
+  .scare {
+    padding: 18px 8px; border: 0; border-radius: 14px; background: #3a0d12; color: #fff;
+    font: inherit; font-size: 20px; font-weight: 800; cursor: pointer;
+  }
+  .scare:active { background: var(--bad); }
+  .scare:disabled, .game:disabled, button.secondary:disabled { opacity: .4; }
+  button.secondary {
+    padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--text);
+    font: inherit; cursor: pointer;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .dots { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .dots span { width: 14px; height: 14px; border-radius: 50%; }
+  details.more { margin-top: 16px; }
+  details.more summary { color: var(--muted); cursor: pointer; padding: 6px 0; }
+  .pick { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .pick select {
+    flex: 1; min-width: 0; padding: 10px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); font: inherit;
+  }
+  .qrcard { display: flex; gap: 14px; align-items: center; }
+  .qrcard svg { width: 120px; height: 120px; flex: none; border-radius: 6px; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -98,25 +133,83 @@
     <dl class="status">
       <dt>Tablet</dt><dd id="online">načítám…</dd>
       <dt>Projektor</dt><dd id="showing">-</dd>
+      <dt>Na oknech</dt><dd id="scene">-</dd>
       <dt>Baterie</dt><dd id="battery">-</dd>
       <dt>Další změna</dt><dd id="next">-</dd>
     </dl>
     <p id="error" class="note error" hidden></p>
   </div>
 
-  <h2>Videa</h2>
-  <div id="videos" class="grid"></div>
-  <p id="pendingNote" class="note" hidden></p>
-  <form id="addForm">
-    <input id="addInput" inputmode="url" autocomplete="off" placeholder="Odkaz na YouTube video">
-    <button class="primary">Pustit</button>
-  </form>
+  <nav class="tabs">
+    <button id="tabVidea" class="tab">👻 Strašidla</button>
+    <button id="tabHra" class="tab">🎮 Hra</button>
+  </nav>
+
+  <section id="paneVidea">
+    <h2>Videa</h2>
+    <div id="videos" class="grid"></div>
+    <p id="pendingNote" class="note" hidden></p>
+    <form id="addForm">
+      <input id="addInput" inputmode="url" autocomplete="off" placeholder="Odkaz na YouTube video">
+      <button class="primary">Pustit</button>
+    </form>
+    <details class="more">
+      <summary>Pokročilé</summary>
+      <div class="card">
+        <p style="margin-top:0">Každé okno jiné video</p>
+        <label class="pick">Levé <select id="leve"></select></label>
+        <label class="pick">Pravé <select id="prave"></select></label>
+        <div class="row"><button id="dve" class="primary">Pustit do oken</button></div>
+        <p class="note">Levé a pravé, jak je vidí lidi z ulice. Zpátky na jedno video: ťukni na video nahoře.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="paneHra" hidden>
+    <div class="card">
+      <dl class="status">
+        <dt>Hra</dt><dd id="gameState">neběží</dd>
+        <dt>Hráči</dt><dd id="players">-</dd>
+      </dl>
+      <div id="dots" class="dots"></div>
+    </div>
+
+    <h2>Lekni je</h2>
+    <div id="scares" class="grid"></div>
+    <p id="reply" class="note">Funguje, když běží hra. Strašidlo překryje hru na pár vteřin, pak se hraje dál.</p>
+
+    <h2>Spustit hru</h2>
+    <div id="games" class="grid"></div>
+    <div class="row"><button id="stopGame" class="secondary">Ukončit hru, zpátky na videa</button></div>
+
+    <h2>Pro hráče</h2>
+    <div class="card qrcard">
+      <svg id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
+      <div>
+        <b>lukaskmoch.cz/duch</b>
+        <p class="note">Lidi naskenují QR, vyberou si barvu a okno a ťukají. Když nikdo nehraje, ukáže se QR i na pravém okně.</p>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" id="qrWindow"> QR na okně, když nikdo nehraje</label>
+
+    <details class="more">
+      <summary>Pokročilé</summary>
+      <div class="card">
+        <div class="row" style="margin-top:0">
+          <button id="testGame" class="secondary">🧪 Zkouška spojení</button>
+          <button id="newSession" class="secondary">Nová hra (odpojit hráče)</button>
+        </div>
+        <p class="note">Zkouška ukazuje na oknech počty ťuků a barvy hráčů. Nová hra vynuluje seznam hráčů, telefony se samy připojí znovu.</p>
+      </div>
+    </details>
+  </section>
 
   <h2>Okna</h2>
   <div class="card">
     <div id="frame" class="frame"><svg id="shapes" viewBox="0 0 1 1" preserveAspectRatio="none"></svg></div>
     <label class="check"><input type="checkbox" id="obrys"> Ukázat obrysy na okně</label>
     <label class="check"><input type="checkbox" id="maska"> Promítat jen do skel</label>
+    <label class="check"><input type="checkbox" id="zrcadlo"> Zrcadlit hru (když jsou nápisy z ulice obráceně)</label>
     <p class="note">Černý obdélník je celá projekce. Zapni obrysy a táhni rohy, dokud nesednou na skla. Velká tečka je roh 1, na okně je taky velká.</p>
   </div>
 
@@ -145,6 +238,34 @@
   let panes = null;
   let panesSending = false;
   let panesDirty = false;
+
+  // Players' phones write here; it holds no key, the rules let them in only while the scene below is a game.
+  const PUBLIC = 'https://lukaskmoch-default-rtdb.firebaseio.com/strasidlo-hra/';
+  const GAMES = [
+    ['netopyri', '🦇 Netopýři', 'Každý ťuk vypustí netopýra v barvě hráče.'],
+    ['obarvi', '🎨 Obarvi okno', 'Barvy se přetahují o okno. Plné okno = efekt v té barvě.'],
+    ['pretahovana', '👻 Přetahovaná', 'Levé okno proti pravému, kdo si přitáhne ducha.'],
+    ['hasici', '🔥 Hasiči', 'Okna hoří, ťukáním se hasí. Pak se ukážou zachránění.'],
+  ];
+  const TEST_GAME = 'zkouska';
+  const SCARES = [['baf', 'BAF!'], ['stin', 'Stín'], ['oci', 'Oči'], ['roj', 'Roj']];
+  const PLAYER_ACTIVE_MS = 30000;
+  // Same order as on the players' phones and in the tablet's game engine.
+  const PLAYER_COLORS = ['#ff7a1a', '#3ddc84', '#b05cff', '#ff3355', '#ffe14d', '#33d6ff', '#ff66c4', '#f2f2f2'];
+  const REPLY_TIMEOUT_MS = 8000;
+  const QR = ['1111111011110010001111111', '1000001010010000101000001', '1011101001000110101011101', '1011101000010100001011101',
+    '1011101010011010001011101', '1000001011100110101000001', '1111111010101010101111111', '0000000011000001100000000',
+    '1110011011011000111110011', '1101000010000001111101011', '0000011111110011001111101', '0101000100111010110111000',
+    '0110011011101000101100001', '0101110010110111101100011', '1111011111011011010001101', '0011010011000001011111000',
+    '1111001010101010111110010', '0000000010011100100010001', '1111111001110000101010001', '1000001010010011100010011',
+    '1011101001111001111110010', '1011101000011001110010110', '1011101010010101110111011', '1000001010001001100110000',
+    '1111111010110000101001001'];
+  // The whole /scena node as last written; the rules accept only whole, valid scenes, so every change is a full PUT.
+  let scena = null;
+  let tab = null;
+  let scareSent = null;
+  const replyTimes = [];
+  let replies = null;
 
   function parseId(text) {
     const m = ID_RE.exec(text.trim());
@@ -209,12 +330,31 @@
     $('showing').textContent = state.strasi ? 'promítá' : (state.slabaBaterie ? 'spí, slabá baterie' : 'spí');
     $('battery').textContent = state.baterie + ' %' + (state.nabiji ? ', nabíjí se' : '');
     $('next').textContent = state.dalsiZmena ? time(state.dalsiZmena) : '-';
+    $('scene').textContent = sceneText();
+  }
+
+  function gameTitle(name) {
+    const g = GAMES.find((x) => x[0] === name);
+    return g ? g[1] : name === TEST_GAME ? '🧪 Zkouška' : name;
+  }
+
+  // What the tablet reports it shows; it differs from the scene we wrote only while it is switching.
+  function sceneText() {
+    if (!state || !state.strasi) return '-';
+    const shown = state.scena || 'video';
+    const wanted = !scena ? shown : scena.druh === 'video' ? (shown === 'soubor' ? 'soubor' : 'video') : scena.druh;
+    if (wanted !== shown) return 'přepíná…';
+    if (shown === 'hra') return 'hra ' + gameTitle(scena && scena.hra);
+    if (shown === 'dve') return 'dvě videa';
+    if (shown === 'soubor') return 'video ze souboru';
+    return 'video';
   }
 
   function label(id) {
     if (id === removing) return 'mažu…';
     if (id === pending) return 'tablet přepíná…';
     if (id !== state.video) return id;
+    if (state.strasi && (state.scena === 'hra' || state.scena === 'dve')) return 'vybráno, teď neběží';
     if (!state.strasi) return 'vybráno, spí';
     return state.prehravac === 1 ? '▶ hraje' : 'načítá se…';
   }
@@ -224,9 +364,10 @@
     if (!state) return;
     const list = (state.seznam || []).slice();
     if (pending && !list.includes(pending)) list.unshift(pending);
-    const shown = JSON.stringify([list, state.video, state.strasi, state.prehravac, pending, removing]);
+    const shown = JSON.stringify([list, state.video, state.strasi, state.prehravac, pending, removing, state.scena]);
     if (shown === videosShown) return;
     videosShown = shown;
+    fillPicks(state.seznam || []);
     $('videos').replaceChildren(...list.map((id) => {
       const b = document.createElement('button');
       b.className = 'video' + (id === state.video && id !== pending ? ' playing' : '') + (id === pending ? ' pending' : '');
@@ -259,6 +400,7 @@
     if (state && removing && !(state.seznam || []).includes(removing)) removing = null;
     renderStatus();
     renderVideos();
+    renderGame();
   }
 
   async function loadLog() {
@@ -323,8 +465,14 @@
     }
   }
 
-  function play(id) {
+  // The video command alone would restart the game: the tablet shows what the scene says, so the scene goes first.
+  async function play(id) {
     pending = id;
+    if (scena && scena.druh !== 'video' && !(await changeScene(Object.assign({}, scena, { druh: 'video' }), false))) {
+      pending = null;
+      render();
+      return;
+    }
     send({ video: id });
   }
 
@@ -349,6 +497,7 @@
         skla: skla.length === 2 ? skla : DEFAULT_PANES.map((q) => q.slice()),
         maska: !!(v && v.maska),
         obrys: !!(v && v.obrys),
+        zrcadlo: !!(v && v.zrcadlo),
       };
     } catch (e) {
       showError('Nejde načíst okna: ' + e.message);
@@ -356,6 +505,7 @@
     }
     $('maska').checked = panes.maska;
     $('obrys').checked = panes.obrys;
+    $('zrcadlo').checked = panes.zrcadlo;
     buildPanes();
   }
 
@@ -430,11 +580,188 @@
     panesSending = false;
   }
 
-  ['maska', 'obrys'].forEach((name) => $(name).addEventListener('change', () => {
+  ['maska', 'obrys', 'zrcadlo'].forEach((name) => $(name).addEventListener('change', () => {
     if (!panes) return;
     panes[name] = $(name).checked;
     sendPanes();
   }));
+
+  function randomId(n) {
+    const abc = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    return Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => abc[b % abc.length]).join('');
+  }
+
+  async function publicApi(path, options) {
+    const r = await fetch(PUBLIC + path + '.json', options);
+    const body = await r.json();
+    if (!r.ok || (body && body.error)) throw new Error(body && body.error ? body.error : 'HTTP ' + r.status);
+    return body;
+  }
+
+  async function loadScene() {
+    try {
+      scena = (await api('/scena.json')) || { druh: 'video' };
+    } catch (e) {
+      showError('Nejde načíst scénu: ' + e.message);
+      return;
+    }
+    if (!tab) showTab(scena.druh === 'hra' ? 'hra' : 'videa');
+    render();
+  }
+
+  // Returns false when the write failed, so the caller can stop.
+  async function changeScene(next, publish) {
+    showError('');
+    try {
+      await api('/scena.json', { method: 'PUT', body: JSON.stringify(next) });
+      scena = next;
+      // The public rule compares with the scene that is already stored, so this write must come second.
+      if (publish) await publicApi('aktualni', { method: 'PUT', body: JSON.stringify(next.relace) });
+    } catch (e) {
+      showError('Nejde přepnout: ' + e.message);
+      render();
+      return false;
+    }
+    render();
+    loadPlayers();
+    return true;
+  }
+
+  function startGame(name) {
+    const next = Object.assign({}, scena, { druh: 'hra', hra: name });
+    if (!next.relace) next.relace = randomId(10);
+    if (next.qr === undefined) next.qr = true;
+    return changeScene(next, true);
+  }
+
+  async function newSession() {
+    if (!confirm('Odpojit všechny hráče a začít od nuly? Telefony se připojí samy, stačí dál ťukat.')) return;
+    const old = scena.relace;
+    if (!(await changeScene(Object.assign({}, scena, { relace: randomId(10) }), true))) return;
+    // Allowed only now that it is no longer the current session.
+    if (old) publicApi('hry/' + old, { method: 'DELETE' }).catch(() => {});
+  }
+
+  function scare(name, title) {
+    const next = Object.assign({}, scena, { strach: name, povel: randomId(10) });
+    const sent = { povel: next.povel, title: title, t: performance.now() };
+    scareSent = sent;
+    $('reply').textContent = 'Posláno: ' + title + '…';
+    setTimeout(() => {
+      if (scareSent === sent) $('reply').textContent = 'Tablet zatím neodpověděl. Je zapnutý a běží hra?';
+    }, REPLY_TIMEOUT_MS);
+    changeScene(next, false);
+  }
+
+  // The tablet echoes the scare's povel once its page has it, so this is the time until it starts on the window.
+  function openReplies() {
+    if (replies) replies.close();
+    replies = new EventSource(url('/odezva.json'));
+    replies.addEventListener('put', (e) => {
+      const msg = JSON.parse(e.data);
+      const povel = msg.path === '/' ? msg.data && msg.data.povel : msg.path === '/povel' ? msg.data : null;
+      if (!scareSent || povel !== scareSent.povel) return;
+      const s = (performance.now() - scareSent.t) / 1000;
+      replyTimes.push(s);
+      const sorted = replyTimes.slice().sort((a, b) => a - b);
+      $('reply').textContent = scareSent.title + ' je na okně za ' + s.toFixed(1) + ' s' +
+        (replyTimes.length > 1 ? ' (obvykle ' + sorted[sorted.length >> 1].toFixed(1) + ' s)' : '');
+      scareSent = null;
+    });
+  }
+
+  async function loadPlayers() {
+    if (document.hidden || tab !== 'hra' || !scena || scena.druh !== 'hra' || !scena.relace) return;
+    let all;
+    try {
+      all = (await publicApi('hry/' + scena.relace + '/hraci')) || {};
+    } catch (e) {
+      return;
+    }
+    const list = Object.values(all);
+    const active = list.filter((p) => Date.now() - p.cas < PLAYER_ACTIVE_MS);
+    const left = active.filter((p) => p.okno === 0).length;
+    $('players').textContent = active.length
+      ? active.length + ' hraje (levé ' + left + ', pravé ' + (active.length - left) + ')'
+      : list.length ? 'teď nikdo, za hru ' + list.length : 'zatím nikdo';
+    $('dots').replaceChildren(...active.slice(0, 60).map((p) => {
+      const d = document.createElement('span');
+      d.style.background = PLAYER_COLORS[p.barva] || '#888';
+      return d;
+    }));
+  }
+
+  function showTab(name) {
+    tab = name;
+    $('tabVidea').classList.toggle('on', name === 'videa');
+    $('tabHra').classList.toggle('on', name === 'hra');
+    $('paneVidea').hidden = name !== 'videa';
+    $('paneHra').hidden = name !== 'hra';
+    loadPlayers();
+  }
+
+  function renderGame() {
+    const playing = !!scena && scena.druh === 'hra';
+    $('gameState').textContent = playing ? gameTitle(scena.hra) : 'neběží';
+    if (!playing) {
+      $('players').textContent = '-';
+      $('dots').replaceChildren();
+    }
+    $('games').querySelectorAll('.game').forEach((b) => b.classList.toggle('on', playing && b.dataset.hra === scena.hra));
+    $('scares').querySelectorAll('.scare').forEach((b) => { b.disabled = !playing; });
+    $('stopGame').disabled = !playing;
+    $('newSession').disabled = !playing;
+    $('qrWindow').checked = !scena || scena.qr !== false;
+  }
+
+  function buildGame() {
+    $('games').replaceChildren(...GAMES.map(([id, title, note]) => {
+      const b = document.createElement('button');
+      b.className = 'game';
+      b.dataset.hra = id;
+      const t = document.createElement('b');
+      t.textContent = title;
+      const n = document.createElement('small');
+      n.textContent = note;
+      b.append(t, n);
+      b.addEventListener('click', () => startGame(id));
+      return b;
+    }));
+    $('scares').replaceChildren(...SCARES.map(([id, title]) => {
+      const b = document.createElement('button');
+      b.className = 'scare';
+      b.textContent = title;
+      b.addEventListener('click', () => scare(id, title));
+      return b;
+    }));
+    $('qr').innerHTML = '<rect width="29" height="29" fill="#fff"/><path fill="#000" d="' +
+      QR.map((row, y) => row.split('').map((c, x) => c === '1' ? 'M' + (x + 2) + ' ' + (y + 2) + 'h1v1h-1z' : '').join('')).join('') + '"/>';
+    $('tabVidea').addEventListener('click', () => showTab('videa'));
+    $('tabHra').addEventListener('click', () => showTab('hra'));
+    $('stopGame').addEventListener('click', () => changeScene(Object.assign({}, scena, { druh: 'video' }), false));
+    $('testGame').addEventListener('click', () => startGame(TEST_GAME));
+    $('newSession').addEventListener('click', newSession);
+    $('qrWindow').addEventListener('change', () => {
+      if (scena) changeScene(Object.assign({}, scena, { qr: $('qrWindow').checked }), false);
+    });
+    $('dve').addEventListener('click', () => {
+      if (!scena || !$('leve').value || !$('prave').value) return;
+      changeScene(Object.assign({}, scena, { druh: 'dve', leve: $('leve').value, prave: $('prave').value }), false);
+    });
+  }
+
+  function fillPicks(ids) {
+    ['leve', 'prave'].forEach((side, i) => {
+      const sel = $(side);
+      const keep = sel.value || (scena && scena[side]) || ids[Math.min(i, ids.length - 1)] || '';
+      sel.replaceChildren(...ids.map((id) => {
+        const o = document.createElement('option');
+        o.value = o.textContent = id;
+        return o;
+      }));
+      if (ids.includes(keep)) sel.value = keep;
+    });
+  }
 
   $('addForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -460,16 +787,22 @@
   document.addEventListener('visibilitychange', () => {
     if (document.hidden || !key) return;
     if (!stream || stream.readyState === EventSource.CLOSED) openStream();
+    if (!replies || replies.readyState === EventSource.CLOSED) openReplies();
     loadLog();
+    loadScene();
   });
 
   key = loadKey();
   if (key) {
     $('app').hidden = false;
+    buildGame();
     openStream();
+    openReplies();
     loadLog();
     loadPanes();
+    loadScene();
     setInterval(renderStatus, 5000);
+    setInterval(loadPlayers, 3000);
   } else {
     $('setup').hidden = false;
   }
